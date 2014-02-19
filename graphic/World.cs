@@ -5,11 +5,15 @@ using System.Text;
 using System.Drawing;
 using Draughts;
 using System.Windows.Forms;
+using Draught;
 
 namespace WindowsFormsApplication1 {
     
     
     class World: Drawable, IMouseNoticeable {
+
+        private Draught.Control control;
+        private Map map;
 
         private Vector3D boardBase = new Vector3D(340, -176, 0);
         private Vector3D tokenBase = new Vector3D(364, -152, 0);
@@ -20,7 +24,10 @@ namespace WindowsFormsApplication1 {
         private Token atMouse;
         private int[] atMousePos = new int[2];
 
-        public World(int priority, int size): base(priority) {
+        public World(int priority, int size, Draught.Control control, Map map): base(priority) {
+            this.control = control;
+            this.map = map;
+
             tokens = new Token[size, size];
             board = new Board3D(boardBase, size);
 
@@ -59,11 +66,8 @@ namespace WindowsFormsApplication1 {
                     atMousePos[1] = posY;
 
                 } else {
-                    throw new NotImplementedException();
-
-                    // Marco mach hinne, ich brauch die Control!
-                    // An Control uebergeben: Ursprungsposition, neue Position.
-
+                    int[] mousePos = {posX, posY};
+                    control.checkTurn(atMousePos, mousePos, map.getToken(mousePos));
                 }
             }
         }

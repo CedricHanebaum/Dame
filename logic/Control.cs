@@ -12,6 +12,8 @@ namespace Draught
         private short index = 0;
         private Players act;
         private RandomAI AI = null;
+
+
         public Control(Map m, Players p1, Players p2)
         {
             this.m = m;

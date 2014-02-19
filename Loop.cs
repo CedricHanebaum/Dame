@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Threading;
+using Draught;
 
 namespace WindowsFormsApplication1 {
     
@@ -17,6 +18,7 @@ namespace WindowsFormsApplication1 {
         private List<Shape> shapeList = new List<Shape>();
 
         private World world;
+        private Draught.Control control;
 
 
         public Loop(Form1 f){
@@ -58,12 +60,16 @@ namespace WindowsFormsApplication1 {
             //Console.WriteLine("Init");
             running = true;
 
-            world = new World(1, 10);
+            Map map = new Map(10);
+
+            control = new Draught.Control(map, Draught.Control.Players.Human, Draught.Control.Players.Human);
+
+            world = new World(1, 10, control, map);
             drawManager.addDrawable(world);
             f.registerMouseListener(world);
 
-            world.setToken(3, 5, World.Token.Black);
 
+            world.setToken(3, 5, World.Token.Black);
             world.setToken(8, 6, World.Token.WhithDraugth);
         }
        

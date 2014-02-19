@@ -13,18 +13,18 @@ namespace Draught
         {
             field = (n == 8) ? new Token[8, 8] : new Token[10, 10];//8x8 or 10x10 field is declaired
 
-            for (int i = 0; i < field.Length; i++){//tokens are given their start positions
+            for (int i = 0; i < field.GetLength(0); i++){//tokens are given their start positions
                 if (i % 2 != 0){
                     field[0, i] = new Stone(Token.PlayerColor.Black);
                     field[2, i] = new Stone(Token.PlayerColor.Black);
-                    field[field.Length - 2, i] = new Stone(Token.PlayerColor.White);
-                    if (field.Length == 10) field[field.Length - 4, i] = new Stone(Token.PlayerColor.White);//4. line at a 10x10 field
+                    field[field.GetLength(0) - 2, i] = new Stone(Token.PlayerColor.White);
+                    if (field.Length == 10) field[field.GetLength(0) - 4, i] = new Stone(Token.PlayerColor.White);//4. line at a 10x10 field
                 }
                 if (i % 2 == 0){
                     field[1, i] = new Stone(Token.PlayerColor.Black);
-                    field[field.Length - 1, i] = new Stone(Token.PlayerColor.White);
-                    field[field.Length - 3, i] = new Stone(Token.PlayerColor.White);
-                    if (field.Length == 10) field[3, i] = new Stone(Token.PlayerColor.Black);//4. line at a 10x10 field
+                    field[field.GetLength(0) - 1, i] = new Stone(Token.PlayerColor.White);
+                    field[field.GetLength(0) - 3, i] = new Stone(Token.PlayerColor.White);
+                    if (field.GetLength(0) == 10) field[3, i] = new Stone(Token.PlayerColor.Black);//4. line at a 10x10 field
                 }
             }
         }
