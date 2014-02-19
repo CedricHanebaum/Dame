@@ -10,7 +10,7 @@ namespace WindowsFormsApplication1 {
         
 
 
-        static void Main() {
+        static void Main(string[] args) {
 
 
             Application.EnableVisualStyles();

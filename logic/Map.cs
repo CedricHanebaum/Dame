@@ -12,7 +12,6 @@ namespace Draught
         public Map(int n)
         {
             field = (n == 8) ? new Token[8, 8] : new Token[10, 10];//8x8 or 10x10 field is declaired
-
             for (int i = 0; i < field.GetLength(1); i++){//tokens are given their start positions
                 if (i % 2 != 0){
                     field[0, i] = new Stone(Token.PlayerColor.Black);
