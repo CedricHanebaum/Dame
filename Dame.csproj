@@ -51,7 +51,7 @@
   <ItemGroup>
     <Compile Include="graphic\Board3D.cs" />
     <Compile Include="graphic\IMouseNoticeable.cs" />
-    <Compile Include="logic\Contol.cs" />
+    <Compile Include="logic\Control.cs" />
     <Compile Include="graphic\Diamond3D.cs" />
     <Compile Include="logic\Draught.cs" />
     <Compile Include="graphic\Drawable.cs" />
@@ -62,7 +62,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="logic\Human.cs" />
     <Compile Include="Loop.cs" />
     <Compile Include="logic\Map.cs" />
     <Compile Include="logic\Player.cs" />

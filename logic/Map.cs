@@ -27,7 +27,6 @@ namespace Draught
                     if (field.Length == 10) field[3, i] = new Stone(Token.PlayerColor.Black);//4. line at a 10x10 field
                 }
             }
-
         }
 
         public Token[,] Field{
@@ -38,6 +37,19 @@ namespace Draught
             Token.PlayerColor c = Field[pos[0], pos[1]].Color;
             if(Field[pos[0], pos[1]].Tok=="Stone") return new Stone(c);
             else return new Draught(c);
+        }
+        public void RemoveToken(int[] pos){
+           this.Field[pos[0], pos[1]] = null;
+        }
+
+        public void MoveToken(int[]start,int[]end){
+            if (Field[start[0], start[1]] != null && Field[end[0], end[1]] == null){
+                Field[end[0], end[1]] = Field[start[0], start[1]];
+                RemoveToken(new int[] { start[0], start[1] });
+            }
+            else{
+                throw new NotSupportedException("Move is not possible");
+            }
         }
     }
 }

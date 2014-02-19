@@ -7,7 +7,7 @@ namespace Draught
 {
     class Draught : Token
     {
-        private string token = "draught";
+        private string tok = "draught";
         public Draught() { }
         public Draught(PlayerColor c) : base(c) { }
         /*Valid moves diagonalTop Left and Right

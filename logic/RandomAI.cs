@@ -11,6 +11,7 @@ namespace Draught
         public int[] ChooseToken(Map m, Token.PlayerColor color)
         {
             List<int[]> tokens = new List<int[]>();
+            List<int[]> priorityTokens = new List<int[]>();
             Random r = new Random();
             int[,] compare = new int[m.Field.Length, m.Field.Length];
             foreach (int a in compare){//fills the map with -1 to compare
@@ -30,8 +31,26 @@ namespace Draught
                     }
                 }
             }
-           int r1 = r.Next(0,tokens.Count);
-           return new int[] { tokens[r1][0], tokens[r1][1] };
+            int count = 0;
+            foreach (var n in tokens){ //checks if there are any priority turns
+                int[,]help=m.Field[n[0],n[1]].nextStep(m,new int[]{n[0],n[1]});
+                foreach (var a in help){
+                    foreach (var b in help){
+                        if (help[a, b] == 1){
+                            count++;
+                            priorityTokens.Add(new int[]{a,b});
+                        }
+                    }
+                }
+            }
+            if (count == 0){//there are no priority turns
+                int r1 = r.Next(0, tokens.Count);
+                return new int[] { tokens[r1][0], tokens[r1][1] };
+            }
+            else{//there are priority turns
+                int r1 = r.Next(0, priorityTokens.Count);
+                return new int[] { tokens[r1][0], tokens[r1][1] };
+            }
         }
 
         //returns the field the Player wants to visit

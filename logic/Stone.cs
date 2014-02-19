@@ -7,7 +7,7 @@ namespace Draught
 {
     class Stone : Token
     {
-        private string token = "stone";
+        private string tok = "stone";
         public Stone(PlayerColor c) : base(c) { }
         public Stone(){}
         //returns a field of integer which say
