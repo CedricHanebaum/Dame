@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using Draughts;
+using tmp.graphic;
 
 namespace WindowsFormsApplication1{
 
@@ -27,16 +28,17 @@ namespace WindowsFormsApplication1{
         }
 
         public void repaint(Bitmap buffer) {
-            if (this.buffer.Equals(buffer)) {
-
-            }
+            /*if (!BitmapCompare.CompareMemCmp(this.buffer, buffer)) {
+                this.buffer = buffer.Clone(new Rectangle(0, 0, buffer.Width, buffer.Height), buffer.PixelFormat);
+                panel1.Invalidate();
+            }*/
 
             this.buffer = buffer.Clone(new Rectangle(0, 0, buffer.Width, buffer.Height), buffer.PixelFormat);
+            panel1.Invalidate();
 
             buffer = null;
             System.GC.Collect();
 
-            panel1.Invalidate();
         }
 
         public void registerMouseListener(IMouseNoticeable m) {
@@ -53,6 +55,14 @@ namespace WindowsFormsApplication1{
             foreach (var m in mouseListeners) {
                 m.mouseClicked(e);
             }
+        }
+
+        public int getPanelWidth() {
+            return panel1.Width;
+        }
+
+        public int getPanelHeight() {
+            return panel1.Height;
         }
     }
 }

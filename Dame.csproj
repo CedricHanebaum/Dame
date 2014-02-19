@@ -52,6 +52,11 @@
     <Compile Include="graphic\Board3D.cs" />
     <Compile Include="graphic\IMouseNoticeable.cs" />
     <Compile Include="logic\Control.cs" />
+    <Compile Include="graphic\BufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="graphic\IMouseNoticeable.cs" />
+    <Compile Include="logic\Contol.cs" />
     <Compile Include="graphic\Diamond3D.cs" />
     <Compile Include="logic\Draught.cs" />
     <Compile Include="graphic\Drawable.cs" />

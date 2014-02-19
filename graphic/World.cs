@@ -31,7 +31,6 @@ namespace WindowsFormsApplication1 {
                 throw new IndexOutOfRangeException();
             }
             tokens[posX, posY] = t;
-
             Console.WriteLine(tokens[posX, posY]);
         }
 
@@ -42,10 +41,17 @@ namespace WindowsFormsApplication1 {
         public void mouseClicked(MouseEventArgs e) {
             Vector3D pos3D = Vector3D.ISOToVector3D(e.Location);
 
+            Console.WriteLine("Click!");
+            Vector3D pos3D = Vector3D.ISOToVector3D(e.Location);
+
+            Console.WriteLine("3D: " + pos3D);
+
             if (board.isInside(pos3D)) {
 
                 int posX = board.getFieldX(pos3D);
                 int posY = board.getFieldY(pos3D);
+
+                Console.WriteLine("X: " + posX + ", Y: " + posY);
 
                 if (atMouse == Token.empty) {
 
@@ -58,7 +64,6 @@ namespace WindowsFormsApplication1 {
                     // An Control uebergeben: Ursprungsposition, neue Position.
 
                 }
-
             }
         }
 
