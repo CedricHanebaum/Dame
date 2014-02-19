@@ -19,19 +19,19 @@ namespace Draught
          */
         public List<int> diagonalTop(List<int> a, int pos0, int pos1, Map field, int j)
         {
-            int length = field.Field.Length;
+            int length = field.Field.GetLength(1);
             List<int> ret = a;
             PlayerColor pc = PlayerColor.White;
-            if (field.Field[pos0, pos1].Color == PlayerColor.White)
+            if (field.Field[pos0, pos1] != null && field.Field[pos0, pos1].Color == pc )
                 pc = PlayerColor.Black;
-            if (pos0 - j >= 1 && ((j > 0 && pos1 + j < length - 1) || (j < 0 && pos1 + j >= 1)))
+            if (pos0 -Math.Abs(j) >= 0 && ((j > 0 && pos1 + Math.Abs(j) < length ) || (j < 0 && pos1 + j >= 0)))
             {
                 if (field.Field[pos0 - Math.Abs(j), pos1 + j] == null)// is empty
                 {
                     ret.Add(0);    //you can move to this field
-                    return diagonalTop(ret, pos0, pos1, field, (Math.Abs(j) + 1));
+                    return diagonalTop(ret, pos0, pos1, field, (Math.Abs(j)/j)*((Math.Abs(j) + 1)));
                 }
-                else if (field.Field[pos0 - j, pos1 + j].Color == pc)
+                else if (field.Field[pos0 - Math.Abs(j), pos1 + Math.Abs(j)].Color == pc)
                 {
                     if (pos0 - j - 1 >= 0 && pos1 + j + 1 < length)
                     {
@@ -42,20 +42,20 @@ namespace Draught
                         {
                             ret.Add(-1);
                             ret.Add(1);// You can move to this field with priority 
-                            return diagonalTop(ret, pos0, pos1, field, (Math.Abs(j) + 1));
+                            return diagonalTop(ret, pos0, pos1, field, ((Math.Abs(j)/j) * (Math.Abs(j) + 1)));
                         }
                     }
                 }
                 else
                 {
                     ret.Add(-1);
-                    return diagonalTop(ret, pos0, pos1, field, (Math.Abs(j) + 1));
+                    return diagonalTop(ret, pos0, pos1, field, ((Math.Abs(j)/j) * (Math.Abs(j) + 1)));
                 }
 
             }
             else
             {
-                if (field.Field[pos0 - j, pos1 + j] == null)// is empty
+                if (field.Field[pos0 - Math.Abs(j), pos1 + j] == null)// is empty
                 {
                     ret.Add(0);    //you can move to this field
                 }
@@ -89,10 +89,10 @@ namespace Draught
         */
         public List<int> diagonalBottom(List<int> a, int pos0, int pos1, Map field, int j)
         {
-            int length = field.Field.Length;
+            int length = field.Field.GetLength(1);
             List<int> ret = a;
             PlayerColor pc = PlayerColor.White;
-            if (field.Field[pos0, pos1].Color == PlayerColor.White)
+            if (field.Field[pos0, pos1] != null  && field.Field[pos0, pos1].Color == pc)
                 pc = PlayerColor.Black;
             if (pos0 + Math.Abs(j) < length - 1 && ((j > 0 && pos1 + j < length - 1) || (j < 0 && pos1 + j >= 1)))
             {
@@ -155,17 +155,17 @@ namespace Draught
         {
             List<int> t = new List<int>();
             List<int> s = new List<int>();
-            int k = 0;
-            int l = field.Field.Length; // 8x8 or 10x10 playground <-- length 8 or 10
+            int k = 1;
+            int l = field.Field.GetLength(1); // 8x8 or 10x10 playground <-- length 8 or 10
             int pos0 = position[0];     // x-coordinate of Draught
             int pos1 = position[1];     // y-coordinate of Draught
             int[,] map = new int[l, l]; // integer-field to return with all viable moves
 
-            foreach (int a in map)      // -1 for a field, where you cannot move forward to
+            for (int i = 0 ; i < l ; ++i)      // -1 for a field, where you cannot move forward to
             {
-                foreach (int b in map)
+                for ( int j = 0 ; j < l ; ++j)
                 {
-                    map[a, b] = -1;
+                    map[i, j] = -1;
                 }
             }
             for (int i = 0; i < 4; ++i)// look in all diagonal directions from this draught where you can go
@@ -177,6 +177,7 @@ namespace Draught
                             s = diagonalTop(t, pos0, pos1, field, -k);
                             for (int j = 1; j < s.Count; ++j)
                             {
+                                if(pos0 - j >= 0 && pos1 - j >= 0)
                                 map[pos0 - j, pos1 - j] = s[j];
                             }
                         }
@@ -186,6 +187,7 @@ namespace Draught
                             s = diagonalTop(t, pos0, pos1, field, k);
                             for (int j = 1; j < s.Count; ++j)
                             {
+                                if(pos0 - j >= 0 && pos1 + j < map.GetLength(1))
                                 map[pos0 - j, pos1 + j] = s[j];
                             }
                             break;
@@ -195,6 +197,7 @@ namespace Draught
                             s = diagonalBottom(t, pos0, pos1, field, k);
                             for (int j = 1; j < s.Count; ++j)
                             {
+                                if(pos0 + j < map.GetLength(1) && pos1 + j < map.GetLength(1))
                                 map[pos0 + j, pos1 + j] = s[j];
                             }
                             break;
@@ -203,7 +206,8 @@ namespace Draught
                         {
                             s = diagonalBottom(t, pos0, pos1, field, -k);
                             for (int j = 1; j < s.Count; ++j)
-                            {
+                            {  
+                                if(pos0+j < map.GetLength(1) && pos1 - j >= 0)
                                 map[pos0 + j, pos1 - j] = s[j];
                             }
                             break;
@@ -212,6 +216,24 @@ namespace Draught
                 }
             }
             return map;
+        }
+        public static void Main(String[] args)
+        {
+            Map m = new Map(10);
+            Draught d = new Draught(PlayerColor.White);
+            int l = m.Field.GetLength(1);
+            int[,] erg = new int[10, 10];
+            int[] pos = new int[] { 3, 2 };
+            erg = d.nextStep(m, pos);
+            for (int i = 0 ; i < l ; ++i)
+            {
+                for ( int j = 0 ; j < l ; ++j)
+                {
+                    Console.Write(erg[i, j]);
+                    Console.Write("   ");
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
