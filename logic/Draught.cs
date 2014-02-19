@@ -7,9 +7,8 @@ namespace Draught
 {
     class Draught : Token
     {
-        private string tok = "draught";
-        public Draught() { }
-        public Draught(PlayerColor c) : base(c) { }
+        public Draught() { tok = "draugth"; }
+        public Draught(PlayerColor c) : base(c) { tok = "draught"; }
         /*Valid moves diagonalTop Left and Right
          *List<int> a is a List with all yet  found moves
          *pos0 is the x-coordinate of draught
@@ -19,7 +18,7 @@ namespace Draught
          */
         public List<int> diagonalTop(List<int> a, int pos0, int pos1, Map field, int j)
         {
-            int length = field.Field.Length;
+            int length = field.Field.GetLength(1);
             List<int> ret = a;
             PlayerColor pc = PlayerColor.White;
             if (field.Field[pos0, pos1].Color == PlayerColor.White)
@@ -89,7 +88,7 @@ namespace Draught
         */
         public List<int> diagonalBottom(List<int> a, int pos0, int pos1, Map field, int j)
         {
-            int length = field.Field.Length;
+            int length = field.Field.GetLength(1);
             List<int> ret = a;
             PlayerColor pc = PlayerColor.White;
             if (field.Field[pos0, pos1].Color == PlayerColor.White)
@@ -156,14 +155,14 @@ namespace Draught
             List<int> t = new List<int>();
             List<int> s = new List<int>();
             int k = 0;
-            int l = field.Field.Length; // 8x8 or 10x10 playground <-- length 8 or 10
+            int l = field.Field.GetLength(1); // 8x8 or 10x10 playground <-- length 8 or 10
             int pos0 = position[0];     // x-coordinate of Draught
             int pos1 = position[1];     // y-coordinate of Draught
             int[,] map = new int[l, l]; // integer-field to return with all viable moves
 
-            foreach (int a in map)      // -1 for a field, where you cannot move forward to
+            for(int a=0;a<map.GetLength(1);++a)      // -1 for a field, where you cannot move forward to
             {
-                foreach (int b in map)
+                for (int b=0;b<map.GetLength(1);++b)
                 {
                     map[a, b] = -1;
                 }
@@ -213,5 +212,6 @@ namespace Draught
             }
             return map;
         }
+
     }
 }
