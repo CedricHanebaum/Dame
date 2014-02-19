@@ -55,9 +55,8 @@ namespace Draught
         }
 
         //returns the field the Player wants to visit
-        public int[] SetStep(Map m, Token.PlayerColor color)
+        public int[] SetStep(Map m, Token.PlayerColor color, int[] pos)
         {
-            int[] pos = ChooseToken(m,color);
             int[,] help;
             Random r = new Random();
             int r1;
