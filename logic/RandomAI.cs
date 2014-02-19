@@ -31,6 +31,7 @@ namespace Draught
                     }
                 }
             }
+
             int count = 0;
             foreach (var n in tokens){ //checks if there are any priority turns
                 int[,]help=m.Field[n[0],n[1]].nextStep(m,new int[]{n[0],n[1]});

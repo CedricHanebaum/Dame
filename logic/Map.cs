@@ -38,9 +38,14 @@ namespace Draught
             if(Field[pos[0], pos[1]].Tok=="Stone") return new Stone(c);
             else return new Draught(c);
         }
-
         public void RemoveToken(int[] pos){
            this.Field[pos[0], pos[1]] = null;
+        }
+
+        public void AddToken(int[] pos, Token t)
+        {
+            if(field[pos[0],pos[1]]==null)
+                field[pos[0],pos[1]] = t;
         }
 
         public void MoveToken(int[]start,int[]end){
