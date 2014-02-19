@@ -14,7 +14,7 @@ namespace Draught
             color = pc;
         }
         public PlayerColor Color{
-            get { return this.Color; }
+            get { return this.color; }
         }
         public string Tok
         {
