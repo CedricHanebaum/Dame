@@ -34,6 +34,8 @@ namespace WindowsFormsApplication1 {
         }
 
         public bool isInside(Vector3D v) {
+            Console.WriteLine("RelPos: " + new Vector3D(v.getX() - this.getBasePoint().getX(), v.getY() - this.getBasePoint().getY(), v.getZ() - this.getBasePoint().getZ()));
+
             Vector3D basePoint = this.getBasePoint();
             int length = RECTSIZE * size;
 
@@ -48,6 +50,7 @@ namespace WindowsFormsApplication1 {
             return false;
         }
 
+        // kaputt
         public int getFieldX(Vector3D v) {
             if (!this.isInside(v)) throw new ArgumentException();
 
@@ -60,6 +63,7 @@ namespace WindowsFormsApplication1 {
             return -1;
         }
 
+        // kaputt
         public int getFieldY(Vector3D v) {
             if (!this.isInside(v)) throw new ArgumentException();
 
@@ -78,6 +82,8 @@ namespace WindowsFormsApplication1 {
 
             Vector3D basePoint = this.getBasePoint();
 
+
+            Console.WriteLine(new Vector3D(x * RECTSIZE, y * RECTSIZE, 0));
 
             Vector3D fieldBase = new Vector3D(basePoint.getX() + x * RECTSIZE, basePoint.getY() + x * RECTSIZE, basePoint.getZ());
 

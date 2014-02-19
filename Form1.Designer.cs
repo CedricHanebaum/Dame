@@ -1,4 +1,5 @@
-﻿namespace WindowsFormsApplication1
+﻿using tmp.graphic;
+namespace WindowsFormsApplication1
 {
     partial class Form1
     {
@@ -28,7 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1 = new BufferedPanel();
             this.SuspendLayout();
             // 
             // panel1
