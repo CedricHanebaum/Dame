@@ -11,19 +11,22 @@ namespace WindowsFormsApplication1 {
     
     class World: Drawable, IMouseNoticeable {
 
-        private Token[,] tokens;
-        private Board3D board;
-
         private Vector3D boardBase = new Vector3D(340, -176, 0);
         private Vector3D tokenBase = new Vector3D(364, -152, 0);
 
+        private Token[,] tokens;
+        private Board3D board;
+
         private Token atMouse;
+        private int[] atMousePos = new int[2];
 
         public World(int priority, int size): base(priority) {
             tokens = new Token[size, size];
             board = new Board3D(boardBase, size);
 
             atMouse = Token.empty;
+            atMousePos[0] = -1;
+            atMousePos[1] = -1;
         }
 
         public void setToken(int posX, int posY, Token t) {
@@ -41,10 +44,6 @@ namespace WindowsFormsApplication1 {
         public void mouseClicked(MouseEventArgs e) {
             Vector3D pos3D = Vector3D.ISOToVector3D(e.Location);
 
-            Console.WriteLine("Click!");
-            Vector3D pos3D = Vector3D.ISOToVector3D(e.Location);
-
-            Console.WriteLine("3D: " + pos3D);
 
             if (board.isInside(pos3D)) {
 
@@ -56,6 +55,8 @@ namespace WindowsFormsApplication1 {
                 if (atMouse == Token.empty) {
 
                     atMouse = tokens[posX, posY];
+                    atMousePos[0] = posX;
+                    atMousePos[1] = posY;
 
                 } else {
                     throw new NotImplementedException();
@@ -73,26 +74,43 @@ namespace WindowsFormsApplication1 {
             for (int i = 0; i < tokens.GetLength(0); ++i) {
                 for (int j = 0; j < tokens.GetLength(1); ++j) {
 
-                    Token3D token = null;
+                    Token3D token1;
+                    Token3D token2;
+
+                    Vector3D v1 = new Vector3D(0, 0, 10);
+
                     Vector3D tokenPosRel = new Vector3D(48*i, 48*j, 0);
                     Vector3D tokenPosAbs = tokenBase + tokenPosRel;
 
                     switch (tokens[i, j]) {
                         case Token.Black:
-                            token = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
+                            token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
+                            token1.draw(g);
                             break;
                         case Token.White:
-                            token = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
+                            token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
+                            token1.draw(g);
                             break;
                         case Token.BlackDraugth:
-                            throw new NotImplementedException();
+                            token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
+                            token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.Black);
+
+                            token1.draw(g);
+                            token2.draw(g);
+
+                            break;
                         case Token.WhithDraugth:
-                            throw new NotImplementedException();
+                            token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
+                            token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.White);
+
+                            token1.draw(g);
+                            token2.draw(g);
+
+                            break;
                         case Token.empty:
                             break;
                     }
 
-                    if (token != null) token.draw(g);
                 }
             }
         }

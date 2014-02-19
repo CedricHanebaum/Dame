@@ -63,6 +63,8 @@ namespace WindowsFormsApplication1 {
             f.registerMouseListener(world);
 
             world.setToken(3, 5, World.Token.Black);
+
+            world.setToken(8, 6, World.Token.WhithDraugth);
         }
        
 

@@ -34,8 +34,6 @@ namespace WindowsFormsApplication1 {
         }
 
         public bool isInside(Vector3D v) {
-            Console.WriteLine("RelPos: " + new Vector3D(v.getX() - this.getBasePoint().getX(), v.getY() - this.getBasePoint().getY(), v.getZ() - this.getBasePoint().getZ()));
-
             Vector3D basePoint = this.getBasePoint();
             int length = RECTSIZE * size;
 
@@ -79,23 +77,24 @@ namespace WindowsFormsApplication1 {
         private bool isInsideField(int x, int y, Vector3D v) {
             if (x < 0 || x > size) throw new ArgumentException();
             if (y < 0 || y > size) throw new ArgumentException();
+            bool ret = false;
 
             Vector3D basePoint = this.getBasePoint();
 
+            // up left
+            Vector3D field1 = new Vector3D(x * RECTSIZE, y * RECTSIZE, 0);
+            // down right
+            Vector3D field2 = new Vector3D(x * RECTSIZE + RECTSIZE, y * RECTSIZE + RECTSIZE, 0);
 
-            Console.WriteLine(new Vector3D(x * RECTSIZE, y * RECTSIZE, 0));
-
-            Vector3D fieldBase = new Vector3D(basePoint.getX() + x * RECTSIZE, basePoint.getY() + x * RECTSIZE, basePoint.getZ());
-
-            if (v.getX() >= fieldBase.getX() && v.getX() <= fieldBase.getX() + RECTSIZE) {
-                if (v.getY() >= fieldBase.getY() && v.getY() <= fieldBase.getY() + RECTSIZE) {
-                    if (v.getZ() == fieldBase.getZ()) {
-                        return true;
+            if (v.getX() >= (basePoint + field1).getX() && v.getX() <= (basePoint + field1).getX() + RECTSIZE) {
+                if (v.getY() >= (basePoint + field1).getY() && v.getY() <= (basePoint + field1).getY() + RECTSIZE) {
+                    if (v.getZ() == (basePoint + field1).getZ()) {
+                        return ret = true;
                     }
                 }
             }
 
-            return false;
+            return ret;
         }
 
         private Triangle3D[] getRect(int x, int y, Color color) {

@@ -8,7 +8,7 @@ namespace Draught
     interface Player
     {
        int[] ChooseToken(Map m, Token.PlayerColor color);
-       int[] SetStep(Map m, Token.PlayerColor color);
+       int[] SetStep(Map m, Token.PlayerColor color, int[] pos);
 
     }
 

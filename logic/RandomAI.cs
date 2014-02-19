@@ -87,6 +87,7 @@ namespace Draught
                     return new int[] { priority[r1][0], priority[r1][1] };
                 }
             }
-        }
+
+    }
     }
 

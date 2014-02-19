@@ -8,31 +8,31 @@ namespace Draught
     class Control
     {
         private Map m;
-        private List<WindowsFormsApplication1.Loop.Players> pList = new List<WindowsFormsApplication1.Loop.Players>();
+        private List<Players> pList = new List<Players>();
         private short index = 0;
-        private WindowsFormsApplication1.Loop.Players act;
+        private Players act;
         private RandomAI AI = null;
-        public Control(Map m, WindowsFormsApplication1.Loop.Players p1, WindowsFormsApplication1.Loop.Players p2)
+        public Control(Map m, Players p1, Players p2)
         {
             this.m = m;
-            if (p1 == WindowsFormsApplication1.Loop.Players.AI || p2 == WindowsFormsApplication1.Loop.Players.AI)
+            if (p1 == Players.AI || p2 == Players.AI)
             {
                 AI = new RandomAI();
-                pList.Add(WindowsFormsApplication1.Loop.Players.AI);
-                if (p1 == WindowsFormsApplication1.Loop.Players.AI && p2 == WindowsFormsApplication1.Loop.Players.AI)
-                    pList.Add(WindowsFormsApplication1.Loop.Players.AI);
+                pList.Add(Players.AI);
+                if (p1 == Players.AI && p2 == Players.AI)
+                    pList.Add(Players.AI);
                 else
-                    pList.Add(WindowsFormsApplication1.Loop.Players.Human);
+                    pList.Add(Players.Human);
             }
             else
             {
-                pList.Add(WindowsFormsApplication1.Loop.Players.Human);
-                pList.Add(WindowsFormsApplication1.Loop.Players.Human);
+                pList.Add(Players.Human);
+                pList.Add(Players.Human);
             }
             act = pList.ElementAt(0);
         }
 
-        private WindowsFormsApplication1.Loop.Players changeIndex()
+        private Players changeIndex()
         {
             short value = (short)(index + 1);
             if (value >= pList.Count())
@@ -70,7 +70,7 @@ namespace Draught
 
         public void AINext()
         {
-            if (pList.ElementAt(index) == WindowsFormsApplication1.Loop.Players.AI)
+            if (pList.ElementAt(index) == Players.AI)
             {
                 int[] pos = AI.ChooseToken(m,Token.PlayerColor.Black);
                 int[] posN = AI.SetStep(m, Token.PlayerColor.Black, pos);
@@ -124,5 +124,7 @@ namespace Draught
             act = changeIndex();
             // BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
         }
+
+        public enum Players { AI, Human };
     }
 }
