@@ -157,7 +157,7 @@ namespace Draught
             int k = 1;
             int pos0 = position[0];     // x-coordinate of Draught
             int pos1 = position[1];     // y-coordinate of Draught
-            int[,] map = new int[l, l]; // integer-field to return with all viable moves
+            int[,] map = new int[field.Field.GetLength(1), field.Field.GetLength(1)]; // integer-field to return with all viable moves
 
             for(int a=0;a<map.GetLength(1);++a)      // -1 for a field, where you cannot move forward to
             {
@@ -216,15 +216,14 @@ namespace Draught
             return map;
         }
 
-        /*
-        public static void Main(String[] args)
+        
+      /*  public static void Main(String[] args)
         {
             Map m = new Map(10);
             Draught d = new Draught(PlayerColor.White);
             int l = m.Field.GetLength(1);
-            int[,] erg = new int[10, 10];
             int[] pos = new int[] { 3, 2 };
-            erg = d.nextStep(m, pos);
+            int[,] erg = d.nextStep(m, pos);
             for (int i = 0 ; i < l ; ++i)
             {
                 for ( int j = 0 ; j < l ; ++j)
@@ -234,7 +233,7 @@ namespace Draught
                 }
                 Console.WriteLine();
             }
-        }
-         * */
+        }*/
+         
     }
 }

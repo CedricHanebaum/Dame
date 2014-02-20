@@ -47,6 +47,15 @@ namespace Draught
                 field[pos[0],pos[1]] = t;
         }
 
+        public bool isOnTheMap(int[] pos)
+        {
+            if (pos[0] >= 0 && pos[0] < this.Field.GetLength(1) && pos[1] >= 0 && pos[1] < this.Field.GetLength(1))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void MoveToken(int[]start,int[]end){
             if (Field[start[0], start[1]] != null && Field[end[0], end[1]] == null){
                 Field[end[0], end[1]] = Field[start[0], start[1]];

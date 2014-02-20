@@ -17,6 +17,11 @@ namespace Draught
         public PlayerColor Color{
             get { return this.color;}
         }
+        public PlayerColor GetOpponentColor()
+        {
+            if (this.Color == PlayerColor.White) return PlayerColor.Black;
+            else return PlayerColor.White;
+        }
         public string Tok
         {
             get { return this.tok; }
