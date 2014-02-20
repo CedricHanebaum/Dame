@@ -8,31 +8,37 @@ namespace Draught
     class Control
     {
         private Map m;
-        private List<WindowsFormsApplication1.Loop.Players> pList = new List<WindowsFormsApplication1.Loop.Players>();
+        private List <Players> pList = new List<Players>();
         private short index = 0;
-        private WindowsFormsApplication1.Loop.Players act;
+        private Players act;
         private RandomAI AI = null;
-        public Control(Map m, WindowsFormsApplication1.Loop.Players p1, WindowsFormsApplication1.Loop.Players p2)
+        public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
+        public Control(Map m, Players p1, Players p2)
         {
             this.m = m;
-            if (p1 == WindowsFormsApplication1.Loop.Players.AI || p2 == WindowsFormsApplication1.Loop.Players.AI)
+            if (!isHuman(p1) || !isHuman(p2))
             {
                 AI = new RandomAI();
-                pList.Add(WindowsFormsApplication1.Loop.Players.AI);
-                if (p1 == WindowsFormsApplication1.Loop.Players.AI && p2 == WindowsFormsApplication1.Loop.Players.AI)
-                    pList.Add(WindowsFormsApplication1.Loop.Players.AI);
-                else
-                    pList.Add(WindowsFormsApplication1.Loop.Players.Human);
             }
-            else
+            if (p1 == p2)
             {
-                pList.Add(WindowsFormsApplication1.Loop.Players.Human);
-                pList.Add(WindowsFormsApplication1.Loop.Players.Human);
+                throw new ArgumentException("Zwei gleiche Spieler uebergeben");
             }
+            pList.Add(p1);
+            pList.Add(p2);
             act = pList.ElementAt(0);
         }
 
-        private WindowsFormsApplication1.Loop.Players changeIndex()
+        private bool isHuman(Players p)
+        {
+            return (p == Players.HumanBlack || p == Players.HumanWhite);
+        }
+
+        private bool isBlack(Players p)
+        {
+            return (p == Players.AIBlack || p == Players.HumanBlack);
+        }
+        private Players changeIndex()
         {
             short value = (short)(index + 1);
             if (value >= pList.Count())
@@ -70,10 +76,13 @@ namespace Draught
 
         public void AINext()
         {
-            if (pList.ElementAt(index) == WindowsFormsApplication1.Loop.Players.AI)
+            if (!isHuman(pList.ElementAt(index)))
             {
-                int[] pos = AI.ChooseToken(m,Token.PlayerColor.Black);
-                int[] posN = AI.SetStep(m, Token.PlayerColor.Black, pos);
+                Token.PlayerColor col = Token.PlayerColor.Black;
+                if(!isBlack(pList.ElementAt(index)))
+                    col = Token.PlayerColor.White;
+                int[] pos = AI.ChooseToken(m,col);
+                int[] posN = AI.SetStep(m, col, pos);
                 checkTurn(pos, posN, m.getToken(pos));
             }
         }
