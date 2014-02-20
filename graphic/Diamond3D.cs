@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace WindowsFormsApplication1 {
     
-    class Diamond3D: Shape {
+    class Diamond3D: FilledShape {
 
         public Diamond3D(Vector3D basePoint):base(basePoint){
 

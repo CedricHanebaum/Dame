@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace WindowsFormsApplication1 {
     
-    class Board3D: Shape {
+    class Board3D: FilledShape {
 
         public const int RECTSIZE = 48;
 
