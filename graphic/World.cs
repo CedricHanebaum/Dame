@@ -5,7 +5,6 @@ using System.Text;
 using System.Drawing;
 using Draught;
 using System.Windows.Forms;
-using Draught;
 using tmp.graphic;
 using Draughts;
 

@@ -51,7 +51,19 @@ namespace Draught
                         }
                     }
                     else// Your ally stone is on field
+                    {//add twice  -1 so that method can see you are not able to move there and behind.
+                        ret.Add(-1);
+                        ret.Add(-1);
+                    }
+                }
+            }
+            for (int c = 0; c < ret.Count - 2; ++c)
+            {
+                if (ret[c] == ret[c + 1] && ret[c] == -1) // if you cannot move twice in a row 
+                {
+                    for (int b = ret.Count -1; b > c; --b)// All fields behind will not be accesable
                     {
+                        ret.RemoveAt(b);
                         ret.Add(-1);
                     }
                 }
@@ -102,6 +114,18 @@ namespace Draught
                     else//Ally stone on field
                     {
                         ret.Add(-1);
+                        ret.Add(-1);
+                    }
+                }
+            }
+            for (int c = 0; c < ret.Count - 2; ++c)
+            {
+                if (ret[c] == ret[c + 1] && ret[c] == -1)// if you cannot move twice in a row
+                {
+                    for (int b = ret.Count - 1; b > c; --b)// all fields behind are not accesible
+                    {
+                        ret.RemoveAt(b);// Removes all entrys till there
+                        ret.Add(-1);// add -1 for not reachable
                     }
                 }
             }
@@ -184,8 +208,12 @@ namespace Draught
        /*public static void Main(String[] args)
         {
             Map m = new Map(10);
-            Draught d = new Draught(PlayerColor.White);
-            m.Field[4, 1] = new Stone(PlayerColor.Black);
+            Draught d = new Draught(PlayerColor.Black);
+            m.Field[3, 2] = new Draught(PlayerColor.Black);
+            m.Field[4, 1] = new Stone(PlayerColor.White);
+            m.RemoveToken(new int[] { 6, 5 });
+            m.RemoveToken(new int[] { 8, 7 });
+            m.RemoveToken(new int[] { 9, 8 }); 
             int l = m.Field.GetLength(1);
             int[] pos = new int[] { 3, 2 };
             int[,] erg = d.nextStep(m, pos);
@@ -200,6 +228,5 @@ namespace Draught
             }
         }*/
 //testend
-         
     }
 }
