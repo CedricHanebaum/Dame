@@ -181,7 +181,7 @@ namespace Draught
         }
 
    //test     
-       public static void Main(String[] args)
+       /*public static void Main(String[] args)
         {
             Map m = new Map(10);
             Draught d = new Draught(PlayerColor.White);
@@ -198,7 +198,7 @@ namespace Draught
                 }
                 Console.WriteLine();
             }
-        }
+        }*/
 //testend
          
     }
