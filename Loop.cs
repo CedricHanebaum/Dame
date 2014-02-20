@@ -61,13 +61,10 @@ namespace WindowsFormsApplication1 {
 			//Console.WriteLine("Init");
 			running = true;
 
-			Map map = new Map(10);
-
-			control = new Draught.Control(map, Draught.Control.Players.HumanBlack, Draught.Control.Players.HumanWhite);
-
-			world = new World(1, 10, control, map);
-			drawManager.addDrawable(world);
-			f.registerMouseListener(world);
+            Map map = new Map(10);
+            world = new World(1, 10, control, map);
+            drawManager.addDrawable(world);
+            f.registerMouseListener(world);
 
 
 			world.setToken(3, 5, World.Token.Black);

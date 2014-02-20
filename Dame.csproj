@@ -55,8 +55,6 @@
     <Compile Include="graphic\BufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="graphic\IMouseNoticeable.cs" />
-    <Compile Include="logic\Contol.cs" />
     <Compile Include="graphic\Diamond3D.cs" />
     <Compile Include="logic\Draught.cs" />
     <Compile Include="graphic\Drawable.cs" />
