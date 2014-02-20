@@ -75,6 +75,10 @@ namespace WindowsFormsApplication1 {
 		public DrawManager getDrawManager() {
 			return drawManager;
 		}
+
+		public void exit() {
+			this.running = false;
+		}
 	
 	}
 }

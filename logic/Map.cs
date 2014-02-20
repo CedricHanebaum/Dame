@@ -35,6 +35,10 @@ namespace Draught
 			listeners.Add(l);
 		}
 
+        public Token[,] Field{
+           get { return this.field; }
+        }
+
 		public void updateListeners()
 		{
 			for (int i = 0; i < listeners.Count; i++)
@@ -43,10 +47,15 @@ namespace Draught
 			}
 		}
 
-		public Token[,] Field
-		{
-		   get { return this.field; }
-		}
+        public bool isOnTheMap(int pos1, int pos2)
+        {
+            if (pos1 >= 0 && pos1 < this.Field.GetLength(1) && pos2 >= 0 && pos2 < this.Field.GetLength(1))
+            {
+                return true;
+            }
+            return false;
+        }
+
 		public Token getToken(int[] pos)
 		{
 			Token.PlayerColor c;
@@ -55,11 +64,12 @@ namespace Draught
 			} catch (NullReferenceException e) {
 				return null;
 			}
-
 			if (Field[pos[0], pos[1]].Tok == "stone") return new Stone(c);
 			else return new Draught(c);
 		}
-		public void RemoveToken(int[] pos)
+		
+    
+        public void RemoveToken(int[] pos)
 		{
 		   this.Field[pos[0], pos[1]] = null;
 		   updateListeners();

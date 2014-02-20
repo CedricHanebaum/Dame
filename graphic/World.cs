@@ -99,6 +99,7 @@ namespace WindowsFormsApplication1 {
 		public void mouseClicked(MouseEventArgs e) {
 			Vector3D pos3D = Vector3D.ISOToVector3D(e.Location);
 
+			Console.WriteLine(">> click");
 
 			if (board.isInside(pos3D)) {
 
@@ -118,9 +119,13 @@ namespace WindowsFormsApplication1 {
 					atMouse = Token.empty;
 				}
 			}
+
+			Console.WriteLine("<<");
 		}
 
 		public void refresh() {
+
+			Console.WriteLine(">>> refresh");
 
 			for (int i = 0; i < tokens.GetLength(0); ++i) {
 				for (int j = 0; j < tokens.GetLength(1); ++j) {
@@ -148,6 +153,8 @@ namespace WindowsFormsApplication1 {
 
 				}
 			}
+
+			Console.WriteLine("<<<");
 		}
 
 		public override void draw(Graphics g) {

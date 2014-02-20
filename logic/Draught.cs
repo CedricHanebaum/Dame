@@ -203,9 +203,9 @@ namespace Draught
             }
             return map;
         }
-/*
-   
-       public static void Main(String[] args)
+
+   //test     
+       /*public static void Main(String[] args)
         {
             Map m = new Map(10);
             Draught d = new Draught(PlayerColor.Black);
