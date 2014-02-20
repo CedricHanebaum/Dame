@@ -9,151 +9,115 @@ namespace Draught
     {
         public Draught() { tok = "draugth"; }
         public Draught(PlayerColor c) : base(c) { tok = "draught"; }
-        /*Valid moves diagonalTop Left and Right
-         *List<int> a is a List with all yet  found moves
-         *pos0 is the x-coordinate of draught
-         *pos1 is the y-coordinate of draught
-         *field is the playground
-         *j is a running variable
+        
+        /*
+         * Method to find all Valid Moves Diagonal Bottom-left to Top-right
+         * pos0 is x-coordinate , pos1 is y-coordinate in Map(position of my stone)
+         * field is the playing map
+         * j is for calculation ( j can be -1 or 1)
+         * in List are integer with value -1(cannot move),0(can move),1 (priority move for jump)
          */
-        public List<int> diagonalTop(List<int> a, int pos0, int pos1, Map field, int j)
-        {
-            int length = field.Field.GetLength(1);
-            List<int> ret = a;
-            PlayerColor pc = PlayerColor.White;
-            if (field.Field[pos0, pos1] != null && field.Field[pos0, pos1].Color == pc )
-                pc = PlayerColor.Black;
-            if (pos0 -Math.Abs(j) >= 0 && ((j > 0 && pos1 + Math.Abs(j) < length ) || (j < 0 && pos1 + j >= 0)))
-            {
-                if (field.Field[pos0 - Math.Abs(j), pos1 + j] == null)// is empty
-                {
-                    ret.Add(0);    //you can move to this field
-                    return diagonalTop(ret, pos0, pos1, field, (Math.Abs(j)/j)*((Math.Abs(j) + 1)));
-                }
-                else if (field.Field[pos0 - Math.Abs(j), pos1 + Math.Abs(j)].Color == pc)
-                {
-                    if (pos0 - j - 1 >= 0 && pos1 + j + 1 < length)
-                    {
-                        var temp = field.Field[pos0 - j - 1, pos1 + j + 1];
-                        if (j < 0)
-                            temp = field.Field[pos0 + j - 1, pos1 + j - 1];
-                        if (temp == null)
-                        {
-                            ret.Add(-1);
-                            ret.Add(1);// You can move to this field with priority 
-                            return diagonalTop(ret, pos0, pos1, field, ((Math.Abs(j)/j) * (Math.Abs(j) + 1)));
-                        }
-                    }
-                }
-                else
-                {
-                    ret.Add(-1);
-                    return diagonalTop(ret, pos0, pos1, field, ((Math.Abs(j)/j) * (Math.Abs(j) + 1)));
-                }
 
-            }
-            else
-            {
-                if (field.Field[pos0 - Math.Abs(j), pos1 + j] == null)// is empty
-                {
-                    ret.Add(0);    //you can move to this field
-                }
-                else if (field.Field[pos0 - Math.Abs(j), pos1 + j].Color == pc)
-                {
-                    if (pos0 - Math.Abs(j) - 1 >= 0 && ((j > 0 && pos1 + j + 1 < length) || (j < 0 && pos1 + j - 1 >= 0)))
-                    {
-                        var temp = field.Field[pos0 - j - 1, pos1 + j + 1];
-                        if (j < 0)
-                            temp = field.Field[pos0 + j - 1, pos1 + j - 1];
-                        if (temp == null)
-                        {
-                            ret.Add(-1);
-                            ret.Add(1);// You can move to this field with priority 
-                        }
-                    }
-                }
-                else
-                {
-                    ret.Add(-1);
-                }
-            }
-            return ret;
-        }
-        /*Valid moves diagonalBottom Left and Right
-        *List<int> a is a List with all yet  found moves
-        *pos0 is the x-coordinate of draught
-        *pos1 is the y-coordinate of draught
-        *field is the playground
-        *j is a running variable
-        */
-        public List<int> diagonalBottom(List<int> a, int pos0, int pos1, Map field, int j)
+        public List<int> BotleftToTopright(int pos0, int pos1, Map field, int j)
         {
-            int length = field.Field.GetLength(1);
-            List<int> ret = a;
-            PlayerColor pc = PlayerColor.White;
-            if (field.Field[pos0, pos1] != null  && field.Field[pos0, pos1].Color == pc)
+            List<int> ret = new List<int>(); // return list
+            int[] pos = new int[2] { pos0, pos1 };//position of your stone
+            PlayerColor pc = PlayerColor.White; 
+            if (field.Field[pos0, pos1] != null  && field.Field[pos0, pos1].Color == pc)// set opponent Color
                 pc = PlayerColor.Black;
-            if (pos0 + Math.Abs(j) < length - 1 && ((j > 0 && pos1 + j < length - 1) || (j < 0 && pos1 + j >= 1)))
+            for (int i = 0; i < field.Field.GetLength(1); ++i)
             {
-                if (field.Field[pos0 + j, pos1 + j] == null)// is empty
+                pos[0] += j * 1;    // Move your stone imaginary to find out, if you can move there
+                pos[1] -= j * 1;
+                if (field.isOnTheMap(pos))// is the field on the map?
                 {
-                    ret.Add(0);    //you can move to this field
-                    return diagonalBottom(ret, pos0, pos1, field, Math.Abs(j) + 1);
-                }
-                else if (field.Field[pos0 + j, pos1 + j].Color == pc)
-                {
-                    if (pos0 + j + 1 < length && ((j > 0 && pos1 + j + 1 < length) || (j < 0 && pos1 + j - 1 >= 0)))
+                    if (field.Field[pos[0],pos[1]] == null)// is empty
                     {
-                        var temp = field.Field[pos0 + Math.Abs(j) + 1, pos1 + j + 1];
-                        if (j < 0)
-                            temp = field.Field[pos0 + Math.Abs(j) + 1, pos1 + j - 1];
-                        if (temp == null)
+                        ret.Add(0);    //you can move to this field
+                    }
+                    else if (field.Field[pos[0],pos[1]].Color == pc)// is enemystone on the field?
+                    {
+                        pos[0] += j * 1;
+                        pos[1] -= j * 1;
+                        if (field.isOnTheMap(pos))  // Can you jump over enemy?
                         {
-                            ret.Add(-1);
-                            ret.Add(1);// You can move to this field with priority 
-                            return diagonalBottom(ret, pos0, pos1, field, Math.Abs(j) + 1);
+                            var temp = field.Field[pos[0], pos[1]];
+                            if (temp == null)
+                            {
+                                ret.Add(-1);// Enemy field
+                                ret.Add(1);// You can move to this field with priority 
+                                i++;// inc i because adding 2 fields
+                            }
                         }
                     }
-                }
-                else
-                {
-                    ret.Add(-1);
-                    return diagonalBottom(ret, pos0, pos1, field, Math.Abs(j) + 1);
-                }
-
-            }
-            else
-            {
-                if (field.Field[pos0 + j, pos1 + j] == null)// is empty
-                {
-                    ret.Add(0);    //you can move to this field
-                }
-                else if (field.Field[pos0 + j, pos1 + j].Color == PlayerColor.White)
-                {
-                    if (pos0 + j + 1 < length && pos1 + j + 1 < length)
+                    else// Your ally stone is on field
                     {
-                        var temp = field.Field[pos0 + Math.Abs(j) + 1, pos1 + j + 1];
-                        if (j < 0)
-                            temp = field.Field[pos0 + Math.Abs(j) + 1, pos1 + j - 1];
-                        if (field.Field[pos0 + j + 1, pos1 + j + 1] == null)
-                        {
-                            ret.Add(-1);
-                            ret.Add(1);// You can move to this field with priority 
-                        }
+                        ret.Add(-1);
                     }
-                }
-                else
-                {
-                    ret.Add(-1);
                 }
             }
             return ret;
         }
 
+
+        /*
+         * Method to find all Valid Moves Diagonal Bottom-right to Top-öeft
+         * pos0 is x-coordinate , pos1 is y-coordinate in Map(position of my stone)
+         * field is the playing map
+         * j is for calculation ( j can be -1 or 1)
+         * in List are integer with value -1(cannot move),0(can move),1 (priority move for jump)
+         */
+        public List<int> BotrightToTopleft(int pos0, int pos1, Map field, int j)
+        {
+            List<int> ret = new List<int>();// return List
+            int[] pos = new int[2] { pos0, pos1 };//Your Position
+            PlayerColor pc = PlayerColor.White;
+            if (field.Field[pos0, pos1] != null && field.Field[pos0, pos1].Color == pc)//set enemy Color
+                pc = PlayerColor.Black;
+            for (int i = 0; i < field.Field.GetLength(1); ++i)
+            {
+                pos[0] += j * 1;// Field in diagonal way
+                pos[1] += j * 1;
+                if (field.isOnTheMap(pos))// is Field on map?
+                {
+                    if (field.Field[pos[0], pos[1]] == null)// is empty
+                    {
+                        ret.Add(0);    //you can move to this field
+                    }
+                    else if (field.Field[pos[0], pos[1]].Color == pc)// is on requested field enemy?
+                    {
+                        pos[0] += j * 1;//look behind enemy
+                        pos[1] += j * 1;
+                        if (field.isOnTheMap(pos))//Can you jump over enemy?
+                        {
+                            var temp = field.Field[pos[0], pos[1]];
+                            if (temp == null)
+                            {
+                                ret.Add(-1);//field where enemy is standing
+                                ret.Add(1);// You can move to this field with priority 
+                                i++;
+                            }
+                        }
+                    }
+                    else//Ally stone on field
+                    {
+                        ret.Add(-1);
+                    }
+                }
+            }
+            return ret;
+        }
+
+        /*
+         * returns an Array with -1(field where u cannot go),0(field where you can go) and 1(priority move for jump)
+         * gets the playing map , and the position of selected draugt
+         */
         public override int[,] nextStep(Map field, int[] position)
         {
-            List<int> t = new List<int>();
-            List<int> s = new List<int>();
+            List<int> erg0 = new List<int>();
+            List<int> erg1 = new List<int>();
+            List<int> erg2 = new List<int>();
+            List<int> erg3 = new List<int>();
             int k = 1;
             int pos0 = position[0];     // x-coordinate of Draught
             int pos1 = position[1];     // y-coordinate of Draught
@@ -172,41 +136,41 @@ namespace Draught
                 {
                     case 0://diagonal up-left
                         {
-                            s = diagonalTop(t, pos0, pos1, field, -k);
-                            for (int j = 1; j < s.Count; ++j)
+                            erg0 = BotrightToTopleft(pos0, pos1, field, -k);
+                            for (int j = 1; j <= erg0.Count; ++j)
                             {
                                 if(pos0 - j >= 0 && pos1 - j >= 0)
-                                map[pos0 - j, pos1 - j] = s[j];
+                                map[pos0 - j, pos1 - j] = erg0[j-1];
                             }
                         }
                         break;
                     case 1://diagonal up-right
                         {
-                            s = diagonalTop(t, pos0, pos1, field, k);
-                            for (int j = 1; j < s.Count; ++j)
+                            erg1 = BotleftToTopright(pos0, pos1, field, -k);
+                            for (int j = 1; j <= erg1.Count; ++j)
                             {
                                 if(pos0 - j >= 0 && pos1 + j < map.GetLength(1))
-                                map[pos0 - j, pos1 + j] = s[j];
+                                map[pos0 - j, pos1 + j] = erg1[j-1];
                             }
                             break;
                         }
                     case 2://diagonal bottom-right
                         {
-                            s = diagonalBottom(t, pos0, pos1, field, k);
-                            for (int j = 1; j < s.Count; ++j)
+                            erg2 = BotrightToTopleft(pos0, pos1, field, k);
+                            for (int j = 1; j <= erg2.Count; ++j)
                             {
                                 if(pos0 + j < map.GetLength(1) && pos1 + j < map.GetLength(1))
-                                map[pos0 + j, pos1 + j] = s[j];
+                                map[pos0 + j, pos1 + j] = erg2[j-1];
                             }
                             break;
                         }
                     case 3://diagonal bottom-left
                         {
-                            s = diagonalBottom(t, pos0, pos1, field, -k);
-                            for (int j = 1; j < s.Count; ++j)
+                            erg3 = BotleftToTopright(pos0, pos1, field, k);
+                            for (int j = 1; j <= erg3.Count; ++j)
                             {  
                                 if(pos0+j < map.GetLength(1) && pos1 - j >= 0)
-                                map[pos0 + j, pos1 - j] = s[j];
+                                map[pos0 + j, pos1 - j] = erg3[j-1];
                             }
                             break;
                         }
@@ -216,11 +180,12 @@ namespace Draught
             return map;
         }
 
-        
-      /*  public static void Main(String[] args)
+   //test     
+       public static void Main(String[] args)
         {
             Map m = new Map(10);
             Draught d = new Draught(PlayerColor.White);
+            m.Field[4, 1] = new Stone(PlayerColor.Black);
             int l = m.Field.GetLength(1);
             int[] pos = new int[] { 3, 2 };
             int[,] erg = d.nextStep(m, pos);
@@ -233,7 +198,8 @@ namespace Draught
                 }
                 Console.WriteLine();
             }
-        }*/
+        }
+//testend
          
     }
 }
