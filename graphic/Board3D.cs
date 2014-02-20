@@ -23,7 +23,7 @@ namespace WindowsFormsApplication1 {
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    Color color = (i + j) % 2 == 0 ? COLOR_BLACK : COLOR_WHITE;
+                    Color color = (i + j) % 2 == 0 ? COLOR_WHITE: COLOR_BLACK;
 
                     Triangle3D[] rect = this.getRect(i * RECTSIZE, j * RECTSIZE, color);
 

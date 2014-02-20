@@ -7,12 +7,13 @@ using Draught;
 using System.Windows.Forms;
 using Draught;
 using tmp.graphic;
+using Draughts;
 
 namespace WindowsFormsApplication1 {
 	
 	
 	class World: Drawable, IMouseNoticeable, IMap 
-    {
+	{
 
 		private Draught.Control control;
 		private Map map;
@@ -36,6 +37,8 @@ namespace WindowsFormsApplication1 {
 			atMouse = Token.empty;
 			atMousePos[0] = -1;
 			atMousePos[1] = -1;
+
+			this.refresh();
 		}
 
 		public void setToken(int posX, int posY, Token t) {
@@ -68,7 +71,7 @@ namespace WindowsFormsApplication1 {
 						case Token.BlackDraugth:
 							tokens[posX, posY] = Token.BlackDraugthGhost;
 							break;
-						case Token.WhithDraugth:
+						case Token.WhiteDraugth:
 							tokens[posX, posY] = Token.WhiteDraugthGhost;
 							break;
 					}
@@ -76,11 +79,6 @@ namespace WindowsFormsApplication1 {
 			}
 
 		}
-
-        public void refresh()
-        {
-            // CEDRIC MACH DEINE ARBEIT DU HUND!!!
-        }
 
 		private void removeAllGhosts() {
 
@@ -116,8 +114,35 @@ namespace WindowsFormsApplication1 {
 
 				} else {
 					int[] mousePos = {posX, posY};
-					// control.checkTurn(atMousePos, mousePos, map.getToken(mousePos));
+					control.checkTurn(atMousePos, mousePos);
 					atMouse = Token.empty;
+				}
+			}
+		}
+
+		public void refresh() {
+			for (int i = 0; i < tokens.GetLength(0); ++i) {
+				for (int j = 0; j < tokens.GetLength(1); ++j) {
+					int[] pos = { i, j };
+
+					Draught.Token t = map.getToken(pos);
+
+					if (t != null) {
+						if (t.Tok == "stone") {
+							if (t.Color == Draught.Token.PlayerColor.Black) {
+								tokens[i, j] = Token.Black;
+							} else {
+								tokens[i, j] = Token.White;
+							}
+						} else {
+							if (t.Color == Draught.Token.PlayerColor.Black) {
+								tokens[i, j] = Token.BlackDraugth;
+							} else {
+								tokens[i, j] = Token.WhiteDraugth;
+							}
+						}
+					}
+
 				}
 			}
 		}
@@ -156,7 +181,7 @@ namespace WindowsFormsApplication1 {
 							token2.draw(g);
 
 							break;
-						case Token.WhithDraugth:
+						case Token.WhiteDraugth:
 							token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
 							token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.White);
 
@@ -194,6 +219,6 @@ namespace WindowsFormsApplication1 {
 			}
 		}
 
-		public enum Token { empty, WhithDraugth, BlackDraugth, White, Black, WhiteDraugthGhost, BlackDraugthGhost, WhiteGhost, BlackGhost};
+		public enum Token { empty, WhiteDraugth, BlackDraugth, White, Black, WhiteDraugthGhost, BlackDraugthGhost, WhiteGhost, BlackGhost};
 	}
 }
