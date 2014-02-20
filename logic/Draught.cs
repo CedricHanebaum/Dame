@@ -157,7 +157,7 @@ namespace Draught
             int k = 1;
             int pos0 = position[0];     // x-coordinate of Draught
             int pos1 = position[1];     // y-coordinate of Draught
-            int[,] map = new int[l, l]; // integer-field to return with all viable moves
+            int[,] map = new int[field.Field.GetLength(1), field.Field.GetLength(1)]; // integer-field to return with all viable moves
 
             for(int a=0;a<map.GetLength(1);++a)      // -1 for a field, where you cannot move forward to
             {
