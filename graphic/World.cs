@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using Draughts;
+using Draught;
 using System.Windows.Forms;
 using Draught;
 using tmp.graphic;
@@ -11,7 +11,8 @@ using tmp.graphic;
 namespace WindowsFormsApplication1 {
 	
 	
-	class World: Drawable, IMouseNoticeable {
+	class World: Drawable, IMouseNoticeable, IMap 
+    {
 
 		private Draught.Control control;
 		private Map map;
@@ -75,6 +76,11 @@ namespace WindowsFormsApplication1 {
 			}
 
 		}
+
+        public void refresh()
+        {
+            // CEDRIC MACH DEINE ARBEIT DU HUND!!!
+        }
 
 		private void removeAllGhosts() {
 
