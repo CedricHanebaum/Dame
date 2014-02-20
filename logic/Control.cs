@@ -18,7 +18,7 @@ namespace Draught
             this.m = m;
             if (!isHuman(p1) || !isHuman(p2))
             {
-                AI = new RandomAI();
+                AI = new RandomAI(); 
             }
             if (p1 == p2)
             {
@@ -133,5 +133,7 @@ namespace Draught
             act = changeIndex();
             // BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
         }
+
+        public enum Players { AI, Human };
     }
 }
