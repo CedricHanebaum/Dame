@@ -22,7 +22,8 @@ namespace Draught
 			}
 			if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
 			{
-				throw new ArgumentException("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!");
+				errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);
+                return;
 			}
 			pList.Add(p1);
 			pList.Add(p2);
@@ -40,6 +41,14 @@ namespace Draught
 		{
 			return (p == Players.AIBlack || p == Players.HumanBlack);
 		}
+
+        private Token.PlayerColor getColor(Players p)
+        {
+            if (p == Players.AIBlack || p == Players.HumanBlack)
+                return Token.PlayerColor.Black;
+            else
+                return Token.PlayerColor.White;
+        }
 
 		//Methode zum Pruefen, ob ein Spieler die Moeglichkeit hat, weitere Zuege zu taetigen
 		private bool hasTurns(Players p)
@@ -107,11 +116,16 @@ namespace Draught
 		{
 			// Hole alle Moeglichkeiten
 			Token t = m.getToken(posO);
+            if (t == null || t.Color != getColor(act))
+            {
+                errorMessage("Ungueltigen Stein ausgewaehlt!", false);
+                return;
+            }
 			int[,] possible = t.nextStep(m,posO);
 			//Pruefe ob ein Schritt ausgefuehrt werden soll, bei dem Schlagzwang besteht
 			if (possible[posN[0], posN[1]] == 1)
 			{
-				doTurn(posN, posO, t);
+				doTurn(posN, posO, t, true);
 			}
 			// Falls ein anderer zug ausgefuehrt wird pruefe, ob nicht doch Schlagzwang besteht
 			else if (possible[posN[0], posN[1]] == 0)
@@ -122,16 +136,17 @@ namespace Draught
 					{
 						if (possible[i,j] == 1)
 						{
-							throw new ArgumentException("Zug nicht moeglich, Schlagzwang du Arschloch!!!!");
+							errorMessage("Zug nicht moeglich, Schlagzwang beachten!", false);
+                            return;
 						}
 					}
 				}
 				// Wenn Alles okay, dann lasse den Zug ausfuehren
-				doTurn(posN, posO, t);
+				doTurn(posN, posO, t, false);
 			}
 			// Zug nicht moeglich, Exception wird geschmissen
 			else if (possible[posN[0], posN[1]] == -1)
-				throw new ArgumentException("Zug nicht moeglich, besser gucken, Sie Arschloch!!!!");
+				errorMessage("Ungueltiges Zielfeld!", false);
 		}
 
 		// Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
@@ -147,8 +162,21 @@ namespace Draught
 				checkTurn(pos, posN);
 			}
 		}
+
+        public void errorMessage(String message, bool exit)
+        {
+            string caption = "Spielfehler";
+            System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
+            System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
+            if (result == System.Windows.Forms.DialogResult.OK && exit)
+            {
+                // PROGRAMM BEENDEN
+                //WindowsFormsApplication1.Program.f.close();
+            }
+        }
+
 		// Methode zum ausfuehren genehmigter Spielzuege
-		public void doTurn(int[] posN, int[] posO, Token t)
+		public void doTurn(int[] posN, int[] posO, Token t, bool beaten)
 		{
 			// Pruefe zunaechst, in welche Richtung die Figur bewegt werden soll
 			int[] direct = new int[2];
@@ -187,16 +215,19 @@ namespace Draught
 				//Naechste Schritte der Dame sind andere als eines Steins
 				possNext = d.nextStep(m, posN);
 			}
-			for (int i = 0; i < possNext.GetLength(0); i++)
-			{
-				for (int j = 0; j < possNext.GetLength(1); j++)
-				{
-					if (possNext[i, j] == 1)
-					{
-						return;
-					}
-				}
-			}
+            if (beaten)
+            {
+                for (int i = 0; i < possNext.GetLength(0); i++)
+                {
+                    for (int j = 0; j < possNext.GetLength(1); j++)
+                    {
+                        if (possNext[i, j] == 1)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
 			// Weiter zum naechsten Spieler
 			act = changeIndex();
 			// Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
@@ -208,7 +239,7 @@ namespace Draught
 					tmp += "2 gewinnt!";
 				else
 					tmp += "1 gewinnt!";
-				throw new ExecutionEngineException(tmp);
+				errorMessage(tmp, true);
 			}
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}

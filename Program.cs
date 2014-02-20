@@ -4,15 +4,13 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace WindowsFormsApplication1 {
+namespace WindowsFormsApplication1 
+{
 
-	static class Program {
-
-
-
-		static void Main(string[] args) {
-
-
+	static class Program 
+    {
+		static void Main(string[] args) 
+        {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
@@ -22,7 +20,6 @@ namespace WindowsFormsApplication1 {
 			t1.Start();
 
 			Application.Run(f);
-
 		}
 	}
 }
