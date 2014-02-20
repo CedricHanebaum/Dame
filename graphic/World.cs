@@ -30,6 +30,7 @@ namespace WindowsFormsApplication1 {
 		public World(int priority, int size, Draught.Control control, Map map): base(priority) {
 			this.control = control;
 			this.map = map;
+			map.addListener(this);
 
 			tokens = new Token[size, size];
 			board = new Board3D(boardBase, size);
@@ -121,6 +122,7 @@ namespace WindowsFormsApplication1 {
 		}
 
 		public void refresh() {
+
 			for (int i = 0; i < tokens.GetLength(0); ++i) {
 				for (int j = 0; j < tokens.GetLength(1); ++j) {
 					int[] pos = { i, j };
@@ -141,6 +143,8 @@ namespace WindowsFormsApplication1 {
 								tokens[i, j] = Token.WhiteDraugth;
 							}
 						}
+					} else {
+						tokens[i, j] = Token.empty;
 					}
 
 				}
