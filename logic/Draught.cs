@@ -160,41 +160,41 @@ namespace Draught
                 {
                     case 0://diagonal up-left
                         {
-                            erg0 = BotrightToTopleft(pos0, pos1, field, -k);
+                            erg0 = BotrightToTopleft(pos0, pos1, field, k);
                             for (int j = 1; j <= erg0.Count; ++j)
                             {
-                                if(pos0 - j >= 0 && pos1 - j >= 0)
-                                map[pos0 - j, pos1 - j] = erg0[j-1];
+                                if(pos0 + j >= 0 && pos1 + j >= 0)
+                                map[pos0 + j, pos1 + j] = erg0[j-1];
                             }
                         }
                         break;
                     case 1://diagonal up-right
                         {
-                            erg1 = BotleftToTopright(pos0, pos1, field, -k);
+                            erg1 = BotleftToTopright(pos0, pos1, field, k);
                             for (int j = 1; j <= erg1.Count; ++j)
                             {
-                                if(pos0 - j >= 0 && pos1 + j < map.GetLength(1))
-                                map[pos0 - j, pos1 + j] = erg1[j-1];
+                                if(pos0 + j >= 0 && pos1 - j < map.GetLength(1))
+                                map[pos0 + j, pos1 - j] = erg1[j-1];
                             }
                             break;
                         }
                     case 2://diagonal bottom-right
                         {
-                            erg2 = BotrightToTopleft(pos0, pos1, field, k);
+                            erg2 = BotrightToTopleft(pos0, pos1, field, -k);
                             for (int j = 1; j <= erg2.Count; ++j)
                             {
-                                if(pos0 + j < map.GetLength(1) && pos1 + j < map.GetLength(1))
-                                map[pos0 + j, pos1 + j] = erg2[j-1];
+                                if(pos0 - j < map.GetLength(1) && pos1 - j < map.GetLength(1))
+                                map[pos0 - j, pos1 - j] = erg2[j-1];
                             }
                             break;
                         }
                     case 3://diagonal bottom-left
                         {
-                            erg3 = BotleftToTopright(pos0, pos1, field, k);
+                            erg3 = BotleftToTopright(pos0, pos1, field, -k);
                             for (int j = 1; j <= erg3.Count; ++j)
                             {  
-                                if(pos0+j < map.GetLength(1) && pos1 - j >= 0)
-                                map[pos0 + j, pos1 - j] = erg3[j-1];
+                                if(pos0-j < map.GetLength(1) && pos1 +j >= 0)
+                                map[pos0 - j, pos1 + j] = erg3[j-1];
                             }
                             break;
                         }
