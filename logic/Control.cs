@@ -38,7 +38,7 @@ namespace Draught
         {
             return (p == Players.AIBlack || p == Players.HumanBlack);
         }
-        private Players changeIndex()
+        public Players changeIndex()
         {
             short value = (short)(index + 1);
             if (value >= pList.Count())
@@ -133,7 +133,5 @@ namespace Draught
             act = changeIndex();
             // BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
         }
-
-        public enum Players { AI, Human };
     }
 }

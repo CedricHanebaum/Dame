@@ -61,9 +61,6 @@ namespace WindowsFormsApplication1 {
             running = true;
 
             Map map = new Map(10);
-
-            control = new Draught.Control(map, Draught.Control.Players.Human, Draught.Control.Players.Human);
-
             world = new World(1, 10, control, map);
             drawManager.addDrawable(world);
             f.registerMouseListener(world);
