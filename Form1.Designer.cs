@@ -30,11 +30,7 @@ namespace WindowsFormsApplication1
         /// </summary>
         private void InitializeComponent()
         {
-<<<<<<< HEAD
-            this.panel1 = new System.Windows.Forms.Panel();
-=======
             this.panel1 = new BufferedPanel();
->>>>>>> ef1a59a4f40d361bcf342263c3bd762afb9f69c7
             this.SuspendLayout();
             // 
             // panel1

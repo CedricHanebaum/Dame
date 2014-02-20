@@ -8,33 +8,81 @@ namespace Draught
     class Control
     {
         private Map m;
-        private List<Players> pList = new List<Players>();
+        private List <Players> pList = new List<Players>();
         private short index = 0;
         private Players act;
         private RandomAI AI = null;
-
-
+        public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
         public Control(Map m, Players p1, Players p2)
         {
             this.m = m;
-            if (p1 == Players.AI || p2 == Players.AI)
+            if (!isHuman(p1) || !isHuman(p2))
             {
-                AI = new RandomAI();
-                pList.Add(Players.AI);
-                if (p1 == Players.AI && p2 == Players.AI)
-                    pList.Add(Players.AI);
-                else
-                    pList.Add(Players.Human);
+                AI = new RandomAI(); 
             }
-            else
+            if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
             {
-                pList.Add(Players.Human);
-                pList.Add(Players.Human);
+                throw new ArgumentException("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!");
             }
+            pList.Add(p1);
+            pList.Add(p2);
             act = pList.ElementAt(0);
         }
 
-        private Players changeIndex()
+        private bool isHuman(Players p)
+        {
+            return (p == Players.HumanBlack || p == Players.HumanWhite);
+        }
+
+        private bool isBlack(Players p)
+        {
+            return (p == Players.AIBlack || p == Players.HumanBlack);
+        }
+
+        private bool hasTurns(Players p)
+        {
+            Token.PlayerColor col = Token.PlayerColor.Black;
+            if (!isBlack(p))
+                col = Token.PlayerColor.White;
+            Token[,] field = m.Field;
+            Token temp = null;
+            int[] posN;
+            for (int i = 0; i < field.GetLength(0); i++)
+            {
+                for (int j = 0; j < field.GetLength(1); i++)
+                {
+                    if (field[i, j].Color == col)
+                    {
+                        temp = field[i, j];
+                        posN = new int[]{ i, j };
+                        int[,] possible = temp.nextStep(m, posN);
+                        if (possible[posN[0], posN[1]] > -1)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool hasStones(Players p)
+        {
+            Token.PlayerColor col = Token.PlayerColor.Black;
+            if(!isBlack(p))
+                col = Token.PlayerColor.White;
+            Token[,] field = m.Field;
+            for (int i = 0; i < field.GetLength(0); i++)
+            {
+                for (int j = 0; j < field.GetLength(1); i++)
+                {
+                    if (field[i, j].Color == col)
+                        return true;
+                }
+            }
+            return false;
+        }
+        public Players changeIndex()
         {
             short value = (short)(index + 1);
             if (value >= pList.Count())
@@ -72,10 +120,13 @@ namespace Draught
 
         public void AINext()
         {
-            if (pList.ElementAt(index) == Players.AI)
+            if (!isHuman(pList.ElementAt(index)))
             {
-                int[] pos = AI.ChooseToken(m,Token.PlayerColor.Black);
-                int[] posN = AI.SetStep(m, Token.PlayerColor.Black, pos);
+                Token.PlayerColor col = Token.PlayerColor.Black;
+                if(!isBlack(pList.ElementAt(index)))
+                    col = Token.PlayerColor.White;
+                int[] pos = AI.ChooseToken(m,col);
+                int[] posN = AI.SetStep(m, col, pos);
                 checkTurn(pos, posN, m.getToken(pos));
             }
         }
@@ -124,9 +175,16 @@ namespace Draught
                 }
             }
             act = changeIndex();
+            if (!hasStones(act) || !hasTurns(act))
+            {
+                String tmp = "Spiel beendet, Spieler ";
+                if(act == pList.ElementAt(0))
+                    tmp += "2 gewinnt!";
+                else
+                    tmp += "1 gewinnt!";
+                throw new ExecutionEngineException(tmp);
+            }
             // BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
         }
-
-        public enum Players { AI, Human };
     }
 }

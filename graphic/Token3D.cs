@@ -7,7 +7,7 @@ using System.Drawing;
 namespace WindowsFormsApplication1 {
     
     
-    class Token3D : Shape{
+    class Token3D : FilledShape{
 
         private Color firstColor;
         private Color secondColor;

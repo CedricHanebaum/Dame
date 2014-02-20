@@ -50,13 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="graphic\Board3D.cs" />
+    <Compile Include="graphic\GhostShape.cs" />
+    <Compile Include="graphic\GhostToken3D.cs" />
     <Compile Include="graphic\IMouseNoticeable.cs" />
+    <Compile Include="graphic\Line3D.cs" />
+    <Compile Include="graphic\LineISO.cs" />
     <Compile Include="logic\Control.cs" />
     <Compile Include="graphic\BufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="graphic\IMouseNoticeable.cs" />
-    <Compile Include="logic\Contol.cs" />
     <Compile Include="graphic\Diamond3D.cs" />
     <Compile Include="logic\Draught.cs" />
     <Compile Include="graphic\Drawable.cs" />

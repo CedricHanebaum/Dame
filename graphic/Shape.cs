@@ -6,12 +6,12 @@ using System.Drawing;
 
 namespace WindowsFormsApplication1 {
 
-    abstract class Shape {
+    abstract class FilledShape {
 
         private List<Triangle3D> triangleList = new List<Triangle3D>();
         private Vector3D basePoint;
 
-        protected Shape(Vector3D basePoint) {
+        protected FilledShape(Vector3D basePoint) {
             this.basePoint = basePoint;
         }
 
