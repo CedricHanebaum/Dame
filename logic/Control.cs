@@ -112,11 +112,11 @@ namespace Draught
             // Falls ein anderer zug ausgefuehrt wird pruefe, ob nicht doch Schlagzwang besteht
             else if (possible[posN[0], posN[1]] == 0)
             {
-                foreach (int a in possible)
+                for (int i=0; i<possible.GetLength(0); i++)
                 {
-                    foreach (int b in possible)
+                    for (int j = 0; j < possible.GetLength(1); j++)
                     {
-                        if (possible[a, b] == 1)
+                        if (possible[i,j] == 1)
                         {
                             throw new ArgumentException("Zug nicht moeglich, Schlagzwang du Arschloch!!!!");
                         }
@@ -183,12 +183,11 @@ namespace Draught
                 //Naechste Schritte der Dame sind andere als eines Steins
                 possNext = d.nextStep(m, posN);
             }
-            foreach (int a in possNext)
+            for (int i = 0; i < possNext.GetLength(0); i++)
             {
-                foreach (int b in possNext)
+                for (int j = 0; j < possNext.GetLength(1); j++)
                 {
-                    //Wenn weitere Schlag moeglich, dann kein Spielerwechsel, warten s.U
-                    if (possNext[a, b] == 1)
+                    if (possNext[i, j] == 1)
                     {
                         return;
                     }
