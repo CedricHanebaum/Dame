@@ -29,16 +29,19 @@ namespace Draught
             act = pList.ElementAt(0);
         }
 
+        // Methode zum Pruefen, ob Spieler Ai oder Human ist
         private bool isHuman(Players p)
         {
             return (p == Players.HumanBlack || p == Players.HumanWhite);
         }
 
+        // Methode zum Pruefen, ob Spieler schwarze oder weisse Steine hat
         private bool isBlack(Players p)
         {
             return (p == Players.AIBlack || p == Players.HumanBlack);
         }
 
+        //Methode zum Pruefen, ob ein Spieler die Moeglichkeit hat, weitere Zuege zu taetigen
         private bool hasTurns(Players p)
         {
             Token.PlayerColor col = Token.PlayerColor.Black;
@@ -66,6 +69,7 @@ namespace Draught
             return false;
         }
 
+        // Methode prueft, ob ein Spieler noch Steine auf dem Feld hat
         private bool hasStones(Players p)
         {
             Token.PlayerColor col = Token.PlayerColor.Black;
@@ -82,6 +86,8 @@ namespace Draught
             }
             return false;
         }
+
+        // Dient zum Durchlaufen der Spielerliste im Rahmen der Spielverwaltung, gibt den Spieler zurueck, der als naechstes an der Reihe ist
         public Players changeIndex()
         {
             short value = (short)(index + 1);
@@ -92,14 +98,18 @@ namespace Draught
             return pList.ElementAt(index);
         }
 
-        public void checkTurn(int[] posO, int[] posN, Token t)
+        // Prueft, ob ein uebergebener Zug moeglich ist, und laesst diesen ggf. ausfuehren
+        public void checkTurn(int[] posO, int[] posN)
         {
+            // Hole alle Moeglichkeiten
+            Token t = m.getToken(posO);
             int[,] possible = t.nextStep(m,posO);
+            //Pruefe ob ein Schritt ausgefuehrt werden soll, bei dem Schlagzwang besteht
             if (possible[posN[0], posN[1]] == 1)
             {
-
                 doTurn(posN, posO, t);
             }
+            // Falls ein anderer zug ausgefuehrt wird pruefe, ob nicht doch Schlagzwang besteht
             else if (possible[posN[0], posN[1]] == 0)
             {
                 foreach (int a in possible)
@@ -112,12 +122,15 @@ namespace Draught
                         }
                     }
                 }
+                // Wenn Alles okay, dann lasse den Zug ausfuehren
                 doTurn(posN, posO, t);
             }
+            // Zug nicht moeglich, Exception wird geschmissen
             else if (possible[posN[0], posN[1]] == -1)
                 throw new ArgumentException("Zug nicht moeglich, besser gucken, Sie Arschloch!!!!");
         }
 
+        // Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
         public void AINext()
         {
             if (!isHuman(pList.ElementAt(index)))
@@ -127,11 +140,13 @@ namespace Draught
                     col = Token.PlayerColor.White;
                 int[] pos = AI.ChooseToken(m,col);
                 int[] posN = AI.SetStep(m, col, pos);
-                checkTurn(pos, posN, m.getToken(pos));
+                checkTurn(pos, posN);
             }
         }
+        // Methode zum ausfuehren genehmigter Spielzuege
         public void doTurn(int[] posN, int[] posO, Token t)
         {
+            // Pruefe zunaechst, in welche Richtung die Figur bewegt werden soll
             int[] direct = new int[2];
             if (posN[0] < posO[0])
             {
@@ -150,17 +165,22 @@ namespace Draught
                     direct[1] = 1;
             }
             int diff = Math.Abs(posN[0]-posO[0])+1;
+            // Gehe mit Hilfe der Richtung den diagonalen Weg zum Zielfeld und entferne ggf. dort stehende Steine
             for (int i = 1; i < diff; i++)
             {
                 m.RemoveToken(new int[]{posO[0]+(i*direct[0]), posO[1]+(i*direct[1])});
             }
+            // Fuehre die eigentliche Bewegung in der Map aus
             m.MoveToken(posO, posN);
+            // Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
             int[,] possNext = t.nextStep(m, posN);
-            if (posN[0] == 0 && t.Tok=="stone")
+            // Wenn letzte Reihe, dann wird Stein zur Dame
+            if (((!isBlack(act) && posN[0] == 0) || (isBlack(act) && posN[0] == m.Field.GetLength(0))) && t.Tok=="stone")
             {
                 Draught d = new Draught(t.Color);
                 m.RemoveToken(posN);
                 m.AddToken(posN, d);
+                //Naechste Schritte der Dame sind andere als eines Steins
                 possNext = d.nextStep(m, posN);
             }
             foreach (int a in possNext)
@@ -174,7 +194,9 @@ namespace Draught
                     }
                 }
             }
+            // Weiter zum naechsten Spieler
             act = changeIndex();
+            // Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
             if (!hasStones(act) || !hasTurns(act))
             {
                 String tmp = "Spiel beendet, Spieler ";
