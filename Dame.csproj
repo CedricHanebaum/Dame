@@ -52,6 +52,7 @@
     <Compile Include="graphic\Board3D.cs" />
     <Compile Include="graphic\GhostShape.cs" />
     <Compile Include="graphic\GhostToken3D.cs" />
+    <Compile Include="graphic\IMap.cs" />
     <Compile Include="graphic\IMouseNoticeable.cs" />
     <Compile Include="graphic\Line3D.cs" />
     <Compile Include="graphic\LineISO.cs" />

@@ -61,19 +61,23 @@ namespace WindowsFormsApplication1 {
 			//Console.WriteLine("Init");
 			running = true;
 
-            Map map = new Map(10);
-            world = new World(1, 10, control, map);
-            drawManager.addDrawable(world);
-            f.registerMouseListener(world);
 
+			Map map = new Map(10);
 
-			world.setToken(3, 5, World.Token.Black);
-			world.setToken(8, 6, World.Token.WhithDraugth);
+			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.HumanBlack);
+
+			world = new World(1, 10, control, map);
+			drawManager.addDrawable(world);
+			f.registerMouseListener(world);
 		}
 	   
 
 		public DrawManager getDrawManager() {
 			return drawManager;
+		}
+
+		public void exit() {
+			this.running = false;
 		}
 	
 	}
