@@ -29,8 +29,8 @@ namespace Draught
             if (field.Field[position[0], position[1]] == null) { return map; }
             else pc = field.Field[position[0], position[1]].Color;
             int[] field1 = { position[0] - 1, position[1] + 1 };//field down left 
-            int[] field2 = { position[0] - 1, position[1] - 1 };//field down rigth
-            int[] field3 = { position[0] + 1, position[1] + 1 };//field up left 
+            int[] field2 = { position[0] + 1, position[1] + 1 };//field down rigth
+            int[] field3 = { position[0] - 1, position[1] - 1 };//field up left 
             int[] field4 = { position[0] + 1, position[1] - 1 };//field up rigth
             if (pc == PlayerColor.Black)
             {
@@ -44,7 +44,10 @@ namespace Draught
                 {
                     if (s == 1)
                     {
-                        map[position[0] + v, position[1] - v] = s;
+                        if (field.isOnTheMap(position[0] + v, position[1] - v))
+                        {
+                            map[position[0] + v, position[1] - v] = s;
+                        }
                     }
                 }
                 s = IsValid(field2, field, 'R', pc);
@@ -57,7 +60,10 @@ namespace Draught
                 {
                     if (s == 1)
                     {
-                        map[position[0] + v, position[1] + v] = s;
+                        if (field.isOnTheMap(position[0] - v, position[1] - v))
+                        {
+                            map[position[0] - v, position[1] - v] = s;
+                        }
                     }
                 }
             }
@@ -71,7 +77,10 @@ namespace Draught
                 }
                 else if (s == 1)
                 {
-                   map[position[0] - v, position[1] - v] = s;
+                    if (field.isOnTheMap(position[0] + v, position[1] + v))
+                    {
+                        map[position[0] + v, position[1] + v] = s;
+                    }
                 }
                 s = IsValid(field4, field, 'R', pc);
                 v = (int)(s * Math.Pow(-1, s) * 2);
@@ -83,7 +92,7 @@ namespace Draught
                 {
                     if (s == 1)
                     {
-                        if(field.isOnTheMap(position[0] + v, position[1] + v)){
+                        if(field.isOnTheMap(position[0] - v, position[1] + v)){
                         map[position[0] - v, position[1] + v] = s;
                         }
                     }
@@ -117,7 +126,7 @@ namespace Draught
                         }
                         else
                         {
-                            if (field.isOnTheMap(field1[0] + 1, field1[1] + 1) && field.Field[field1[0] + 1, field1[1] + 1] == null)
+                            if (field.isOnTheMap(field1[0] - 1, field1[1] - 1) && field.Field[field1[0] - 1, field1[1] - 1] == null)
                             {
                                 return valid = 1;//high priority
                             }
@@ -127,7 +136,7 @@ namespace Draught
                     {//field is to the right
                         if (pc == PlayerColor.White)
                         {
-                            if (field.isOnTheMap(field1[0] - 1, field1[1] - 1 ) && field.Field[field1[0] - 1, field1[1] - 1] == null)
+                            if (field.isOnTheMap(field1[0] +1, field1[1] + 1 ) && field.Field[field1[0] + 1, field1[1] + 1] == null)
                             {//it is possible to jump over
                                 valid = 1;
                             }

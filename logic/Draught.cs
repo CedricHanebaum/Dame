@@ -160,11 +160,11 @@ namespace Draught
                 {
                     case 0://diagonal up-left
                         {
-                            erg0 = BotrightToTopleft(pos0, pos1, field, k);
+                            erg0 = BotrightToTopleft(pos0, pos1, field, -k);
                             for (int j = 1; j <= erg0.Count; ++j)
                             {
-                                if(pos0 + j >= 0 && pos1 + j >= 0)
-                                map[pos0 + j, pos1 + j] = erg0[j-1];
+                                if(pos0 - j >= 0 && pos1 - j >= 0)
+                                map[pos0 - j, pos1 - j] = erg0[j-1];
                             }
                         }
                         break;
@@ -180,11 +180,11 @@ namespace Draught
                         }
                     case 2://diagonal bottom-right
                         {
-                            erg2 = BotrightToTopleft(pos0, pos1, field, -k);
+                            erg2 = BotrightToTopleft(pos0, pos1, field, k);
                             for (int j = 1; j <= erg2.Count; ++j)
                             {
-                                if(pos0 - j < map.GetLength(1) && pos1 - j < map.GetLength(1))
-                                map[pos0 - j, pos1 - j] = erg2[j-1];
+                                if(pos0 + j < map.GetLength(1) && pos1 + j < map.GetLength(1))
+                                map[pos0 + j, pos1 + j] = erg2[j-1];
                             }
                             break;
                         }
@@ -205,15 +205,12 @@ namespace Draught
         }
 
    //test     
-       /*public static void Main(String[] args)
+       public static void Main(String[] args)
         {
             Map m = new Map(10);
             Draught d = new Draught(PlayerColor.Black);
             m.Field[3, 2] = new Draught(PlayerColor.Black);
-            m.Field[4, 1] = new Stone(PlayerColor.White);
-            m.RemoveToken(new int[] { 6, 5 });
-            m.RemoveToken(new int[] { 8, 7 });
-            m.RemoveToken(new int[] { 9, 8 }); 
+            m.Field[4, 1] = new Stone(PlayerColor.White); 
             int l = m.Field.GetLength(1);
             int[] pos = new int[] { 3, 2 };
             int[,] erg = d.nextStep(m, pos);
@@ -226,7 +223,7 @@ namespace Draught
                 }
                 Console.WriteLine();
             }
-        }*/
+        }
 //testend
     }
 }
