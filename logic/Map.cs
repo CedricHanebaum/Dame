@@ -12,20 +12,21 @@ namespace Draught
 		public Map(int n)
 		{
 			field = (n == 8) ? new Token[8, 8] : new Token[10, 10];//8x8 or 10x10 field is declaired
+
 			for (int i = 0; i < field.GetLength(1); i++){//tokens are given their start positions
 				if (i % 2 != 0)
 				{
-					field[0, i] = new Stone(Token.PlayerColor.Black);
-					field[2, i] = new Stone(Token.PlayerColor.Black);
-					field[field.GetLength(1) - 2, i] = new Stone(Token.PlayerColor.White);
-					if (field.GetLength(1) == 10) field[field.GetLength(1) - 4, i] = new Stone(Token.PlayerColor.White);//4. line at a 10x10 field
+					field[i, 0] = new Stone(Token.PlayerColor.Black);
+					field[i, 2] = new Stone(Token.PlayerColor.Black);
+					field[i, field.GetLength(1) - 2] = new Stone(Token.PlayerColor.White);
+					if (field.GetLength(1) == 10) field[i, field.GetLength(1) - 4] = new Stone(Token.PlayerColor.White);//4. line at a 10x10 field
 				}
 				if (i % 2 == 0)
 				{
-					field[1, i] = new Stone(Token.PlayerColor.Black);
-					field[field.GetLength(1) - 1, i] = new Stone(Token.PlayerColor.White);
-					field[field.GetLength(1) - 3, i] = new Stone(Token.PlayerColor.White);
-					if (field.GetLength(1) == 10) field[3, i] = new Stone(Token.PlayerColor.Black);//4. line at a 10x10 field
+					field[i, 1] = new Stone(Token.PlayerColor.Black);
+					field[i, field.GetLength(1) - 1] = new Stone(Token.PlayerColor.White);
+					field[i, field.GetLength(1) - 3] = new Stone(Token.PlayerColor.White);
+					if (field.GetLength(1) == 10) field[i, 3] = new Stone(Token.PlayerColor.Black);//4. line at a 10x10 field
 				}
 			}
 		}
@@ -35,9 +36,9 @@ namespace Draught
 			listeners.Add(l);
 		}
 
-        public Token[,] Field{
-           get { return this.field; }
-        }
+		public Token[,] Field{
+		   get { return this.field; }
+		}
 
 		public void updateListeners()
 		{
@@ -47,17 +48,22 @@ namespace Draught
 			}
 		}
 
-        public bool isOnTheMap(int pos1, int pos2)
-        {
-            if (pos1 >= 0 && pos1 < this.Field.GetLength(1) && pos2 >= 0 && pos2 < this.Field.GetLength(1))
-            {
-                return true;
-            }
-            return false;
-        }
+		public bool isOnTheMap(int pos1, int pos2)
+		{
+			if (pos1 >= 0 && pos1 < this.Field.GetLength(1) && pos2 >= 0 && pos2 < this.Field.GetLength(1))
+			{
+				return true;
+			}
+			return false;
+		}
 
 		public Token getToken(int[] pos)
 		{
+
+			return field[pos[0], pos[1]];
+
+
+			/*
 			Token.PlayerColor c;
 			try {
 				c = Field[pos[0], pos[1]].Color;
@@ -65,19 +71,19 @@ namespace Draught
 				return null;
 			}
 			if (Field[pos[0], pos[1]].Tok == "stone") return new Stone(c);
-			else return new Draught(c);
+			else return new Draught(c); */
 		}
 		
-    
-        public void RemoveToken(List<int[]> pos)
+	
+		public void RemoveToken(List<int[]> pos)
 		{
-            int[] temp;
-            for (int i = 0; i < pos.Count; i++)
-            {
-                temp = pos.ElementAt(i);
-                this.Field[temp[0],temp[1]] = null;
-            }
-		    updateListeners();
+			int[] temp;
+			for (int i = 0; i < pos.Count; i++)
+			{
+				temp = pos.ElementAt(i);
+				this.Field[temp[0],temp[1]] = null;
+			}
+			updateListeners();
 		}
 
 		public void AddToken(int[] pos, Token t)
