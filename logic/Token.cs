@@ -12,7 +12,6 @@ namespace Draught
         public Token() { }
         public Token(PlayerColor pc){
             color = pc;
-            
         }
         public PlayerColor Color{
             get { return this.color;}

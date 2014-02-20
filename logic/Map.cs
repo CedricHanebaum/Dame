@@ -33,6 +33,7 @@ namespace Draught
         }
         public Token getToken(int[] pos)
         {
+            if (field[pos[0], pos[1]] == null) return null;
             Token.PlayerColor c = Field[pos[0], pos[1]].Color;
             if(Field[pos[0], pos[1]].Tok=="stone") return new Stone(c);
             else return new Draught(c);
@@ -47,9 +48,9 @@ namespace Draught
                 field[pos[0],pos[1]] = t;
         }
 
-        public bool isOnTheMap(int[] pos)
+        public bool isOnTheMap(int pos1, int pos2)
         {
-            if (pos[0] >= 0 && pos[0] < this.Field.GetLength(1) && pos[1] >= 0 && pos[1] < this.Field.GetLength(1))
+            if (pos1 >= 0 && pos1 < this.Field.GetLength(1) && pos2 >= 0 && pos2 < this.Field.GetLength(1))
             {
                 return true;
             }

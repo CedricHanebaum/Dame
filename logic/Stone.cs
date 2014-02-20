@@ -7,7 +7,8 @@ namespace Draught
 {
     class Stone : Token
     {
-     
+
+      
         public Stone(PlayerColor c) : base(c) { tok = "stone"; }
         public Stone() { tok = "stone"; }
         
@@ -82,7 +83,7 @@ namespace Draught
                 {
                     if (s == 1)
                     {
-                        if(field.isOnTheMap(new int[]{position[0] + v, position[1] + v})){
+                        if(field.isOnTheMap(position[0] + v, position[1] + v)){
                         map[position[0] + v, position[1] - v] = s;
                         }
                     }
@@ -97,28 +98,26 @@ namespace Draught
         //returns 1 if a field have to be visited (obligation to capture)
         public int IsValid(int[] field1, Map field, char direction, PlayerColor p)
         {
-            if (!field.isOnTheMap(new int[]{field1[0],field1[1]})) return -1;//field is on the map
+            if (!field.isOnTheMap(field1[0],field1[1])) return -1;//field is on the map
             int valid = -1;//default
             PlayerColor pc = PlayerColor.Empty;
-            if(field.Field[field1[0],field1[1]]!=null) pc = field.Field[field1[0],field1[1]].Color;
- 
-            if (field1[0]>=0&&field1[0] < field.Field.GetLength(1) && field1[1]>=0&&field1[1] < field.Field.GetLength(1)){//field is on the map
+            if(field.Field[field1[0],field1[1]]!=null)
+                pc = field.Field[field1[0],field1[1]].Color;
+            if (field.isOnTheMap(field1[0],field1[1])){//field is on the map
                 if (field.Field[field1[0], field1[1]] == null){//field is free
                     return valid=0;
                 }
                 else if (pc != p) {//if an opponent is on that field 
-                    if (direction == 'L')
-                    {//field is to the left
+                    if (direction == 'L'){//field is to the left
                         if (pc == PlayerColor.White)
                         {
-                            if (field.isOnTheMap(new int[] { field1[0] + 1, field1[1] - 1 }) && field.Field[field1[0] + 1, field1[1] - 1] == null)
-                            {//it is possible to jump over
+                            if (field.isOnTheMap(field1[0] + 1, field1[1] - 1 ) && field.Field[field1[0] + 1, field1[1] - 1] == null){//it is possible to jump over
                                 valid = 1;//high priority
                             }
                         }
                         else
                         {
-                            if (field.isOnTheMap(new int[] { field1[0] - 1, field1[1] - 1 }) && field.Field[field1[0] - 1, field1[1] - 1] == null)
+                            if (field.isOnTheMap(field1[0] - 1, field1[1] - 1) && field.Field[field1[0] - 1, field1[1] - 1] == null)
                             {
                                 return valid = 1;//high priority
                             }
@@ -128,14 +127,14 @@ namespace Draught
                     {//field is to the right
                         if (pc == PlayerColor.White)
                         {
-                            if (field.isOnTheMap(new int[] { field1[0] + 1, field1[1] + 1 }) && field.Field[field1[0] + 1, field1[1] + 1] == null)
+                            if (field.isOnTheMap(field1[0] + 1, field1[1] + 1 ) && field.Field[field1[0] + 1, field1[1] + 1] == null)
                             {//it is possible to jump over
                                 valid = 1;
                             }
                         }
                         else
                         {
-                            if (field.isOnTheMap(new int[] { field1[0] - 1, field1[1] + 1 }) && field.Field[field1[0] - 1, field1[1] + 1] == null)
+                            if (field.isOnTheMap(field1[0] - 1, field1[1] + 1) && field.Field[field1[0] - 1, field1[1] + 1] == null)
                             {//it is possible to jump over
                                 return valid = 1;
                             }
