@@ -69,17 +69,21 @@ namespace Draught
 		}
 		
     
-        public void RemoveToken(int[] pos)
+        public void RemoveToken(List<int[]> pos)
 		{
-		   this.Field[pos[0], pos[1]] = null;
-		   updateListeners();
+            int[] temp;
+            for (int i = 0; i < pos.Count; i++)
+            {
+                temp = pos.ElementAt(i);
+                this.Field[temp[0],temp[1]] = null;
+            }
+		    updateListeners();
 		}
 
 		public void AddToken(int[] pos, Token t)
 		{
 			if(field[pos[0],pos[1]]==null)
 				field[pos[0],pos[1]] = t;
-			updateListeners();
 		}
 
 		public bool isOnTheMap(int[] pos)
@@ -96,7 +100,7 @@ namespace Draught
 			if (Field[start[0], start[1]] != null && Field[end[0], end[1]] == null)
 			{
 				Field[end[0], end[1]] = Field[start[0], start[1]];
-				RemoveToken(new int[] { start[0], start[1] });
+				RemoveToken(new List<int[]> {new int[] { start[0], start[1] }});
 			}
 			else
 			{

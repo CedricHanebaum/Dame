@@ -13,9 +13,11 @@ namespace Draught
 		private Players act;
 		private RandomAI AI = null;
 		public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
-		public Control(Map m, Players p1, Players p2)
+        private WindowsFormsApplication1.Loop l;
+        public Control(Map m, Players p1, Players p2, WindowsFormsApplication1.Loop l)
 		{
 			this.m = m;
+            this.l = l;
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
@@ -70,6 +72,7 @@ namespace Draught
 						temp = field[i, j];
 						posN = new int[]{ i, j };
 						int[,] possible = temp.nextStep(m, posN);
+                        Console.WriteLine(possible[posN[0], posN[1]]);
 						if (possible[posN[0], posN[1]] > -1)
 						{
 							return true;
@@ -168,11 +171,8 @@ namespace Draught
             string caption = "Spielfehler";
             System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
             System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
-            if (result == System.Windows.Forms.DialogResult.OK && exit)
-            {
-                // PROGRAMM BEENDEN
-                //WindowsFormsApplication1.Program.f.close();
-            }
+            if (exit)
+                l.exit();
         }
 
 		// Methode zum ausfuehren genehmigter Spielzuege
@@ -198,19 +198,20 @@ namespace Draught
 			}
 			int diff = Math.Abs(posN[0]-posO[0])+1;
 			// Gehe mit Hilfe der Richtung den diagonalen Weg zum Zielfeld und entferne ggf. dort stehende Steine
+            List<int[]> removeList = new List<int[]>();
 			for (int i = 1; i < diff; i++)
 			{
-				m.RemoveToken(new int[]{posO[0]+(i*direct[0]), posO[1]+(i*direct[1])});
+				removeList.Add(new int[]{posO[0]+(i*direct[0]), posO[1]+(i*direct[1])});
 			}
 			// Fuehre die eigentliche Bewegung in der Map aus
 			m.MoveToken(posO, posN);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			int[,] possNext = t.nextStep(m, posN);
 			// Wenn letzte Reihe, dann wird Stein zur Dame
-			if (((!isBlack(act) && posN[0] == 0) || (isBlack(act) && posN[0] == m.Field.GetLength(0))) && t.Tok=="stone")
+			if (((!isBlack(act) && posN[0] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0))) && t.Tok=="stone")
 			{
 				Draught d = new Draught(t.Color);
-				m.RemoveToken(posN);
+				removeList.Add(posN);
 				m.AddToken(posN, d);
 				//Naechste Schritte der Dame sind andere als eines Steins
 				possNext = d.nextStep(m, posN);
@@ -231,8 +232,7 @@ namespace Draught
 			// Weiter zum naechsten Spieler
 			act = changeIndex();
 			// Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
-			//if (!hasStones(act) || !hasTurns(act))
-			if(!hasStones(act))
+			if (!hasStones(act))
 			{
 				String tmp = "Spiel beendet, Spieler ";
 				if(act == pList.ElementAt(0))
