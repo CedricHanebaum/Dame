@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Draught
 {
-	class Control
+	class Control : ITickable
 	{
 		private Map m;
 		private List <Players> pList = new List<Players>();
@@ -14,10 +14,14 @@ namespace Draught
 		private RandomAI AI = null;
 		public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
         private WindowsFormsApplication1.Loop l;
+        private long delta = 0;
+        private int[] temp = null;
+        private Boolean wait = true;
         public Control(Map m, Players p1, Players p2, WindowsFormsApplication1.Loop l)
 		{
 			this.m = m;
             this.l = l;
+            l.addToUpdateList(this);
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
@@ -30,7 +34,27 @@ namespace Draught
 			pList.Add(p1);
 			pList.Add(p2);
 			act = pList.ElementAt(0);
+            AINext();
 		}
+
+        public void update(long delta)
+        {
+            this.delta += delta;
+            if (temp != null)
+            {
+                if (wait)
+                {
+                    this.delta = 0;
+                    wait = false;
+                }
+                if (this.delta >= 2000)
+                {
+                    checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
+                    temp = null;
+                }
+            }
+
+        }
 
 		// Methode zum Pruefen, ob Spieler Ai oder Human ist
 		private bool isHuman(Players p)
@@ -120,8 +144,15 @@ namespace Draught
 		}
 
 		// Prueft, ob ein uebergebener Zug moeglich ist, und laesst diesen ggf. ausfuehren
-		public void checkTurn(int[] posO, int[] posN)
+		public void checkTurn(int[] posO, int[] posN, bool automatic)
 		{
+            if (!isHuman(act) && !automatic)
+            {
+                errorMessage("Die KI ist am Zug!", false);
+                return;
+            }
+            else if (automatic)
+                temp = null;
 			// Hole alle Moeglichkeiten
 			Token t = m.getToken(posO);
             if (t == null || t.Color != getColor(act))
@@ -154,7 +185,6 @@ namespace Draught
 		// Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
 		public void AINext()
 		{
-            //Console.ReadLine();
 			if (!isHuman(pList.ElementAt(index)))
 			{
 				Token.PlayerColor col = Token.PlayerColor.Black;
@@ -162,7 +192,8 @@ namespace Draught
 					col = Token.PlayerColor.White;
 				int[] pos = AI.ChooseToken(m,col);
 				int[] posN = AI.SetStep(m, col, pos);
-				checkTurn(pos, posN);
+                temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
+                wait = true;
 			}
 		}
 
@@ -227,7 +258,7 @@ namespace Draught
                         if (possNext[i, j] == 1)
                         {
                             if (!isHuman(act))
-                                AINext();
+                               AINext();
                             return;
                         }
                     }

@@ -5,8 +5,9 @@ using System.Text;
 using System.Drawing;
 using Draught;
 using System.Windows.Forms;
-using tmp.graphic;
+using Draught;
 using Draughts;
+using tmp.graphic;
 
 namespace WindowsFormsApplication1 {
 	
@@ -113,7 +114,7 @@ namespace WindowsFormsApplication1 {
 
 				} else {
 					int[] mousePos = {posX, posY};
-					control.checkTurn(atMousePos, mousePos);
+					control.checkTurn(atMousePos, mousePos, false);
 					atMouse = Token.empty;
 				}
 			}
