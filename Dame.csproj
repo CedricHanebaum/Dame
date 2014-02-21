@@ -70,6 +70,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="logic\ITickable.cs" />
     <Compile Include="Loop.cs" />
     <Compile Include="logic\Map.cs" />
     <Compile Include="logic\Player.cs" />

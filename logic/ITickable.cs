@@ -7,7 +7,7 @@ namespace tmp {
 
 	interface ITickable {
 
-		public void update(long delta);
+		void update(long delta);
 
 	}
 }
