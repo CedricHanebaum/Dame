@@ -9,6 +9,7 @@ using Draught;
 using System.Diagnostics;
 using tmp;
 using graphic;
+using graphic.GUI;
 
 namespace ISO {
 	
@@ -82,10 +83,14 @@ namespace ISO {
 
 			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.AIBlack, this);
 
-			world = new World(1, 8, control, map);
-			world.setVisible(true);
-			drawManager.addDrawable(world);
-			f.registerMouseListener(world);
+        //world = new World(1, 8, control, map);
+        //    world.setVisible(true);
+        //    drawManager.addDrawable(world);
+        //    f.registerMouseListener(world);
+            Gui optionen = new Options(new GuiManager(this,drawManager));
+            optionen.setVisible(true);
+            drawManager.addDrawable(optionen);
+            f.registerMouseListener(optionen);
 		}
 	   
 
