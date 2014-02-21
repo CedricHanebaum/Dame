@@ -6,16 +6,22 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Threading;
 using Draught;
+using System.Diagnostics;
+using tmp;
 
 namespace WindowsFormsApplication1 {
 	
 	class Loop {
 
 		private Form1 f;
+
 		private bool running;
+		private long delta;
+		private long lastFrame;
+		private List<ITickable> updateList = new List<ITickable>();
+
 		private Bitmap buffer;
 		private DrawManager drawManager;
-		private List<FilledShape> shapeList = new List<FilledShape>();
 
 		private World world;
 		private Draught.Control control;
@@ -33,9 +39,16 @@ namespace WindowsFormsApplication1 {
 			while (running) {
 				this.calc();
 				this.repaint();
+				this.calcDelta();
 				Thread.Sleep(30);
 			}
 			this.close();
+		}
+
+		private void calcDelta() {
+			long thisFrame = Loop.getCurrentTime();
+			delta = thisFrame - lastFrame;
+			lastFrame = thisFrame;
 		}
 
 		private void close() {
@@ -54,11 +67,13 @@ namespace WindowsFormsApplication1 {
 		}
 
 		private void calc() {
-			// Console.WriteLine("Calc");
+			foreach (var t in updateList) {
+				t.update(delta);
+			}
 		}
 
 		private void initialize() {
-			//Console.WriteLine("Init");
+			this.lastFrame = Loop.getCurrentTime();
 			running = true;
 
 
@@ -76,8 +91,16 @@ namespace WindowsFormsApplication1 {
 			return drawManager;
 		}
 
+		public void addToUpdateList(ITickable t) {
+			updateList.Add(t);
+		}
+
 		public void exit() {
 			this.running = false;
+		}
+
+		private static long getCurrentTime() {
+			return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 		}
 	
 	}
