@@ -62,11 +62,11 @@ namespace WindowsFormsApplication1 {
 			running = true;
 
 
-			Map map = new Map(10);
+			Map map = new Map(8);
 
-			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.HumanBlack);
+			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.HumanBlack, this);
 
-			world = new World(1, 10, control, map);
+			world = new World(1, 8, control, map);
 			drawManager.addDrawable(world);
 			f.registerMouseListener(world);
 		}
