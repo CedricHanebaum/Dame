@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ISO {
+namespace graphic {
     
     
     abstract class Drawable: IComparable {

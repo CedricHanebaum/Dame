@@ -8,6 +8,7 @@ using System.Threading;
 using Draught;
 using System.Diagnostics;
 using tmp;
+using graphic;
 
 namespace ISO {
 	

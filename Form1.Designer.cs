@@ -1,4 +1,5 @@
 
+using graphic;
 namespace ISO
 {
     partial class Form1

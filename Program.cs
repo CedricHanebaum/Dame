@@ -8,9 +8,9 @@ namespace ISO
 {
 
 	static class Program 
-    {
+	{
 		static void Main(string[] args) 
-        {
+		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 

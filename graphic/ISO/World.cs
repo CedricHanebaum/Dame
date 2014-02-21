@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using Draught;
 using System.Windows.Forms;
+using graphic;
 
 namespace ISO {
 	

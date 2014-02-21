@@ -49,18 +49,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="graphic\Board3D.cs" />
-    <Compile Include="graphic\GhostShape.cs" />
-    <Compile Include="graphic\GhostToken3D.cs" />
-    <Compile Include="graphic\IMap.cs" />
+    <Compile Include="graphic\GUI\Gui.cs" />
+    <Compile Include="graphic\ISO\Board3D.cs" />
+    <Compile Include="graphic\ISO\GhostShape.cs" />
+    <Compile Include="graphic\ISO\GhostToken3D.cs" />
+    <Compile Include="graphic\ISO\IMap.cs" />
     <Compile Include="graphic\IMouseNoticeable.cs" />
-    <Compile Include="graphic\Line3D.cs" />
-    <Compile Include="graphic\LineISO.cs" />
+    <Compile Include="graphic\ISO\Line3D.cs" />
+    <Compile Include="graphic\ISO\LineISO.cs" />
+    <Compile Include="logic\ITickable.cs" />
     <Compile Include="logic\Control.cs" />
     <Compile Include="graphic\BufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="graphic\Diamond3D.cs" />
+    <Compile Include="graphic\ISO\Diamond3D.cs" />
     <Compile Include="logic\Draught.cs" />
     <Compile Include="graphic\Drawable.cs" />
     <Compile Include="graphic\DrawManager.cs" />
@@ -70,21 +72,20 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="logic\ITickable.cs" />
     <Compile Include="Loop.cs" />
     <Compile Include="logic\Map.cs" />
     <Compile Include="logic\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="logic\RandomAI.cs" />
-    <Compile Include="graphic\Shape.cs" />
+    <Compile Include="graphic\ISO\Shape.cs" />
     <Compile Include="logic\Stone.cs" />
     <Compile Include="logic\Token.cs" />
-    <Compile Include="graphic\Token3D.cs" />
-    <Compile Include="graphic\Triangle3D.cs" />
-    <Compile Include="graphic\TriangleISO.cs" />
-    <Compile Include="graphic\Vector3D.cs" />
-    <Compile Include="graphic\World.cs" />
+    <Compile Include="graphic\ISO\Token3D.cs" />
+    <Compile Include="graphic\ISO\Triangle3D.cs" />
+    <Compile Include="graphic\ISO\TriangleISO.cs" />
+    <Compile Include="graphic\ISO\Vector3D.cs" />
+    <Compile Include="graphic\ISO\World.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -107,6 +108,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
