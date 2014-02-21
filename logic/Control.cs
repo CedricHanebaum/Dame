@@ -206,18 +206,18 @@ namespace Draught
 			// Fuehre die eigentliche Bewegung in der Map aus
             removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
-			int[,] possNext = t.nextStep(m, posN);
 			// Wenn letzte Reihe, dann wird Stein zur Dame
 			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
 			{
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
 				m.AddToken(posN, d);
+                t = d;
 				//Naechste Schritte der Dame sind andere als eines Steins
-				possNext = d.nextStep(m, posN);
 			}
             m.RemoveToken(removeList);
             m.AddToken(posN, t);
+            int[,] possNext = t.nextStep(m, posN);
             if (beaten)
             {
                 for (int i = 0; i < possNext.GetLength(0); i++)
@@ -226,6 +226,8 @@ namespace Draught
                     {
                         if (possNext[i, j] == 1)
                         {
+                            if (!isHuman(act))
+                                AINext();
                             return;
                         }
                     }
@@ -242,6 +244,7 @@ namespace Draught
 				else
 					tmp += "1 gewinnt!";
 				errorMessage(tmp, true);
+                return;
 			}
             if (!isHuman(act))
                 AINext();

@@ -203,29 +203,5 @@ namespace Draught
             }
             return map;
         }
-
-   //test
-        /*
-       public static void Main(String[] args)
-        {
-            Map m = new Map(10);
-            Draught d = new Draught(PlayerColor.Black);
-            m.Field[3, 2] = new Draught(PlayerColor.Black);
-            m.Field[4, 1] = new Stone(PlayerColor.White); 
-            int l = m.Field.GetLength(1);
-            int[] pos = new int[] { 3, 2 };
-            int[,] erg = d.nextStep(m, pos);
-            for (int i = 0 ; i < l ; ++i)
-            {
-                for ( int j = 0 ; j < l ; ++j)
-                {
-                    Console.Write(erg[i, j]);
-                    Console.Write("   ");
-                }
-                Console.WriteLine();
-            }
-        }
-        */
-//testend
     }
 }

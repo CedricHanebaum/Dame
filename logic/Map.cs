@@ -82,7 +82,6 @@ namespace Draught
 			{
 				temp = pos.ElementAt(i);
 				this.Field[temp[0],temp[1]] = null;
-                Console.WriteLine("Gelöscht");
 			}
 		}
 
