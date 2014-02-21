@@ -60,7 +60,7 @@ namespace Draught
             else
             {//there are priority turns
                 int r1 = r.Next(0, priorityTokens.Count);
-                return new int[] { tokens[r1][0], tokens[r1][1] };
+                return new int[] { priorityTokens[r1][0], priorityTokens[r1][1] };
             }
         }
 
