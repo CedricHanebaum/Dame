@@ -8,7 +8,7 @@ namespace Draught
     class RandomAI : Player
     {
 
-        //returns a random token which is able to move to at least one field
+        //returns a more or less random token which is able to move to at least one field
         public int[] ChooseToken(Map m, Token.PlayerColor color)
         {
             List<int[]> tokens = new List<int[]>();
@@ -54,11 +54,25 @@ namespace Draught
             }
             if (count == 0)
             {//there are no priority turns
+                for (int i = 0; i < tokens.Count; ++i)//if AI can get a Draugt it should get it
+                {
+                    if (color == Token.PlayerColor.Black &&tokens[i][1] == m.Field.GetLength(1)-2&&m.Field[tokens[i][0],tokens[i][1]].Tok=="stone")
+                        return new int[] { tokens[i][0], tokens[i][1] };
+                    if (color == Token.PlayerColor.White && tokens[i][1] == 1 && m.Field[tokens[i][0], tokens[i][1]].Tok == "stone")
+                        return new int[] { tokens[i][0], tokens[i][1] };
+                }
                 int r1 = r.Next(0, tokens.Count);
                 return new int[] { tokens[r1][0], tokens[r1][1] };
             }
             else
             {//there are priority turns
+                for (int i = 0; i < priorityTokens.Count; ++i)
+                {
+                    if (color == Token.PlayerColor.Black && priorityTokens[i][1] == m.Field.GetLength(1) - 3 && m.Field[tokens[i][0], tokens[i][1]].Tok == "stone")
+                        return new int[] { priorityTokens[i][0], priorityTokens[i][1] };
+                    if (color == Token.PlayerColor.White && priorityTokens[i][1] == 2 && m.Field[tokens[i][0], tokens[i][1]].Tok == "stone")
+                        return new int[] { priorityTokens[i][0], priorityTokens[i][1] };
+                }
                 int r1 = r.Next(0, priorityTokens.Count);
                 return new int[] { priorityTokens[r1][0], priorityTokens[r1][1] };
             }

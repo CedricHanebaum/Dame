@@ -6,6 +6,8 @@ using System.Drawing;
 using Draught;
 using System.Windows.Forms;
 using graphic;
+using Draught;
+using graphic;
 
 namespace ISO {
 	
@@ -112,7 +114,7 @@ namespace ISO {
 
 				} else {
 					int[] mousePos = {posX, posY};
-					control.checkTurn(atMousePos, mousePos);
+					control.checkTurn(atMousePos, mousePos, false);
 					atMouse = Token.empty;
 				}
 			}

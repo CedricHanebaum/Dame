@@ -48,6 +48,12 @@ namespace Draught
                                 ret.Add(1);// You can move to this field with priority 
                                 i++;// inc i because adding 2 fields
                             }
+                            else
+                            {
+                                ret.Add(-1);
+                                ret.Add(-1);
+                                ++i;
+                            }
                         }
                     }
                     else// Your ally stone is on field
@@ -107,7 +113,13 @@ namespace Draught
                             {
                                 ret.Add(-1);//field where enemy is standing
                                 ret.Add(1);// You can move to this field with priority 
-                                i++;
+                                ++i;
+                            }
+                            else
+                            {
+                                ret.Add(-1);
+                                ret.Add(-1);
+                                ++i;
                             }
                         }
                     }

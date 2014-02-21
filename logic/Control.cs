@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ISO;
+using tmp;
 
 namespace Draught
 {
-	class Control
+	class Control : ITickable
 	{
 		private Map m;
 		private List <Players> pList = new List<Players>();
@@ -14,11 +15,16 @@ namespace Draught
 		private Players act;
 		private RandomAI AI = null;
 		public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
-		private Loop l;
-		public Control(Map m, Players p1, Players p2, Loop l)
+        private Loop l;
+        private long delta = 0;
+        private int[] temp = null;
+        private Boolean wait = true;
+        public Control(Map m, Players p1, Players p2, Loop l)
 		{
 			this.m = m;
-			this.l = l;
+            this.l = l;
+            l.addToUpdateList(this);
+
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
@@ -31,7 +37,26 @@ namespace Draught
 			pList.Add(p1);
 			pList.Add(p2);
 			act = pList.ElementAt(0);
+            AINext(null);
 		}
+
+        public void update(long delta)
+        {
+            this.delta += delta;
+            if (temp != null)
+            {
+                if (wait)
+                {
+                    this.delta = 0;
+                    wait = false;
+                }
+                if (this.delta >= 1500)
+                {
+                    checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
+                }
+            }
+
+        }
 
 		// Methode zum Pruefen, ob Spieler Ai oder Human ist
 		private bool isHuman(Players p)
@@ -121,8 +146,15 @@ namespace Draught
 		}
 
 		// Prueft, ob ein uebergebener Zug moeglich ist, und laesst diesen ggf. ausfuehren
-		public void checkTurn(int[] posO, int[] posN)
+		public void checkTurn(int[] posO, int[] posN, bool automatic)
 		{
+            if (!isHuman(act) && !automatic)
+            {
+                errorMessage("Die KI ist am Zug!", false);
+                return;
+            }
+            else if (automatic)
+                temp = null;
 			// Hole alle Moeglichkeiten
 			Token t = m.getToken(posO);
 			if (t == null || t.Color != getColor(act))
@@ -153,17 +185,18 @@ namespace Draught
 		}
 
 		// Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
-		public void AINext()
+		public void AINext(int[] pos)
 		{
-			//Console.ReadLine();
 			if (!isHuman(pList.ElementAt(index)))
 			{
 				Token.PlayerColor col = Token.PlayerColor.Black;
 				if(!isBlack(pList.ElementAt(index)))
 					col = Token.PlayerColor.White;
-				int[] pos = AI.ChooseToken(m,col);
+				if(pos==null) pos = AI.ChooseToken(m,col);
 				int[] posN = AI.SetStep(m, col, pos);
-				checkTurn(pos, posN);
+                wait = true;
+                temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
+                Console.WriteLine(temp.ToString());
 			}
 		}
 
@@ -208,32 +241,38 @@ namespace Draught
 			removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			// Wenn letzte Reihe, dann wird Stein zur Dame
+            bool draught = false;
 			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
 			{
+                draught = true;
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
 				m.AddToken(posN, d);
 				t = d;
 				//Naechste Schritte der Dame sind andere als eines Steins
 			}
-			m.RemoveToken(removeList);
-			m.AddToken(posN, t);
-			int[,] possNext = t.nextStep(m, posN);
-			if (beaten)
-			{
-				for (int i = 0; i < possNext.GetLength(0); i++)
-				{
-					for (int j = 0; j < possNext.GetLength(1); j++)
-					{
-						if (possNext[i, j] == 1)
-						{
-							if (!isHuman(act))
-								AINext();
-							return;
-						}
-					}
-				}
-			}
+            m.RemoveToken(removeList);
+            m.AddToken(posN, t);
+            int[,] possNext = t.nextStep(m, posN);
+            if (beaten) temp = null;
+            if (beaten&&!draught)
+            {
+                for (int i = 0; i < possNext.GetLength(0); i++)
+                {
+                    for (int j = 0; j < possNext.GetLength(1); j++)
+                    {
+                        if (possNext[i, j] == 1)
+                        {
+                            if (!isHuman(act))
+                            {
+                                AINext(posN);
+                                Console.WriteLine("KI darf nochmal");
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
 			// Weiter zum naechsten Spieler
 			act = changeIndex();
 			// Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
@@ -248,7 +287,7 @@ namespace Draught
 				return;
 			}
 			if (!isHuman(act))
-				AINext();
+				AINext(null);
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}
