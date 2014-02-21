@@ -17,8 +17,8 @@ namespace WindowsFormsApplication1 {
 		private Draught.Control control;
 		private Map map;
 
-		private Vector3D boardBase = new Vector3D(340, -176, 0);
-		private Vector3D tokenBase = new Vector3D(364, -152, 0);
+		private static Vector3D boardBase = new Vector3D(336, -172, 0);
+		private static Vector3D tokenBase = boardBase + new Vector3D(24, 24, 0);
 
 		private Token[,] tokens;
 		private Board3D board;
