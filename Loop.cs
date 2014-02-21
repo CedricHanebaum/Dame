@@ -9,7 +9,7 @@ using Draught;
 using System.Diagnostics;
 using tmp;
 
-namespace WindowsFormsApplication1 {
+namespace ISO {
 	
 	class Loop {
 
@@ -79,7 +79,7 @@ namespace WindowsFormsApplication1 {
 
 			Map map = new Map(8);
 
-			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.HumanBlack, this);
+			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.AIBlack, this);
 
 			world = new World(1, 8, control, map);
 			drawManager.addDrawable(world);
