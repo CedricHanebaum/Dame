@@ -82,14 +82,15 @@ namespace Draught
 			{
 				temp = pos.ElementAt(i);
 				this.Field[temp[0],temp[1]] = null;
+                Console.WriteLine("Gelöscht");
 			}
-			updateListeners();
 		}
 
 		public void AddToken(int[] pos, Token t)
 		{
 			if(field[pos[0],pos[1]]==null)
 				field[pos[0],pos[1]] = t;
+            updateListeners();
 		}
 
 		public bool isOnTheMap(int[] pos)
@@ -99,19 +100,6 @@ namespace Draught
 				return true;
 			}
 			return false;
-		}
-
-		public void MoveToken(int[]start,int[]end)
-		{
-			if (Field[start[0], start[1]] != null && Field[end[0], end[1]] == null)
-			{
-				Field[end[0], end[1]] = Field[start[0], start[1]];
-				RemoveToken(new List<int[]> {new int[] { start[0], start[1] }});
-			}
-			else
-			{
-				throw new NotSupportedException("Move is not possible");
-			}
 		}
 	}
 }

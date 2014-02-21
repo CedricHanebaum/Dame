@@ -173,7 +173,7 @@ namespace Draught
                             erg1 = BotleftToTopright(pos0, pos1, field, k);
                             for (int j = 1; j <= erg1.Count; ++j)
                             {
-                                if(pos0 + j >= 0 && pos1 - j < map.GetLength(1))
+                                if(pos0 + j < map.GetLength(0) && pos1 - j >=0)
                                 map[pos0 + j, pos1 - j] = erg1[j-1];
                             }
                             break;
@@ -193,7 +193,7 @@ namespace Draught
                             erg3 = BotleftToTopright(pos0, pos1, field, -k);
                             for (int j = 1; j <= erg3.Count; ++j)
                             {  
-                                if(pos0-j < map.GetLength(1) && pos1 +j >= 0)
+                                if(pos0-j >=0 && pos1+j < map.GetLength(1) )
                                 map[pos0 - j, pos1 + j] = erg3[j-1];
                             }
                             break;
@@ -204,7 +204,8 @@ namespace Draught
             return map;
         }
 
-   //test     
+   //test
+        /*
        public static void Main(String[] args)
         {
             Map m = new Map(10);
@@ -224,6 +225,7 @@ namespace Draught
                 Console.WriteLine();
             }
         }
+        */
 //testend
     }
 }

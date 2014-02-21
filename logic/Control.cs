@@ -53,7 +53,7 @@ namespace Draught
         }
 
 		//Methode zum Pruefen, ob ein Spieler die Moeglichkeit hat, weitere Zuege zu taetigen
-		private bool hasTurns(Players p)
+		private bool hasTurns(Players p, bool schlagzwang)
 		{
 			Token.PlayerColor col = Token.PlayerColor.Black;
 			if (!isBlack(p))
@@ -72,11 +72,16 @@ namespace Draught
 						temp = field[i, j];
 						posN = new int[]{ i, j };
 						int[,] possible = temp.nextStep(m, posN);
-                        Console.WriteLine(possible[posN[0], posN[1]]);
-						if (possible[posN[0], posN[1]] > -1)
-						{
-							return true;
-						}
+                        for (int k = 0; k < possible.GetLength(0); k++)
+                        {
+                            for (int z = 0; z < possible.GetLength(1); z++)
+                            {
+                                if (possible[k, z] > -1 && !schlagzwang)
+                                    return true;
+                                else if (schlagzwang && possible[k, z] == 1)
+                                    return true;
+                            }
+                        }
 					}
 				}
 			}
@@ -133,19 +138,13 @@ namespace Draught
 			// Falls ein anderer zug ausgefuehrt wird pruefe, ob nicht doch Schlagzwang besteht
 			else if (possible[posN[0], posN[1]] == 0)
 			{
-				for (int i=0; i<possible.GetLength(0); i++)
-				{
-					for (int j = 0; j < possible.GetLength(1); j++)
+					if (hasTurns(act,true))
 					{
-						if (possible[i,j] == 1)
-						{
-							errorMessage("Zug nicht moeglich, Schlagzwang beachten!", false);
-                            return;
-						}
+						errorMessage("Zug nicht moeglich, Schlagzwang beachten!", false);
+                        return;
 					}
-				}
-				// Wenn Alles okay, dann lasse den Zug ausfuehren
-				doTurn(posN, posO, t, false);
+                    // Wenn Alles okay, dann lasse den Zug ausfuehren
+                    doTurn(posN, posO, t, false);
 			}
 			// Zug nicht moeglich, Exception wird geschmissen
 			else if (possible[posN[0], posN[1]] == -1)
@@ -155,6 +154,7 @@ namespace Draught
 		// Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
 		public void AINext()
 		{
+            //Console.ReadLine();
 			if (!isHuman(pList.ElementAt(index)))
 			{
 				Token.PlayerColor col = Token.PlayerColor.Black;
@@ -204,11 +204,11 @@ namespace Draught
 				removeList.Add(new int[]{posO[0]+(i*direct[0]), posO[1]+(i*direct[1])});
 			}
 			// Fuehre die eigentliche Bewegung in der Map aus
-			m.MoveToken(posO, posN);
+            removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			int[,] possNext = t.nextStep(m, posN);
 			// Wenn letzte Reihe, dann wird Stein zur Dame
-			if (((!isBlack(act) && posN[0] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0))) && t.Tok=="stone")
+			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
 			{
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
@@ -216,6 +216,8 @@ namespace Draught
 				//Naechste Schritte der Dame sind andere als eines Steins
 				possNext = d.nextStep(m, posN);
 			}
+            m.RemoveToken(removeList);
+            m.AddToken(posN, t);
             if (beaten)
             {
                 for (int i = 0; i < possNext.GetLength(0); i++)
@@ -232,7 +234,7 @@ namespace Draught
 			// Weiter zum naechsten Spieler
 			act = changeIndex();
 			// Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
-			if (!hasStones(act))
+			if (!hasStones(act)||!hasTurns(act,false))
 			{
 				String tmp = "Spiel beendet, Spieler ";
 				if(act == pList.ElementAt(0))
@@ -241,6 +243,8 @@ namespace Draught
 					tmp += "1 gewinnt!";
 				errorMessage(tmp, true);
 			}
+            if (!isHuman(act))
+                AINext();
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}
