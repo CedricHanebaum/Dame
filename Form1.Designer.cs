@@ -1,6 +1,6 @@
 
-﻿using tmp.graphic;
-namespace WindowsFormsApplication1
+using graphic;
+namespace ISO
 {
     partial class Form1
     {

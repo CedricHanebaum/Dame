@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ISO;
 
 namespace Draught
 {
@@ -89,7 +90,7 @@ namespace Draught
 		{
 			if(field[pos[0],pos[1]]==null)
 				field[pos[0],pos[1]] = t;
-            updateListeners();
+			updateListeners();
 		}
 
 		public bool isOnTheMap(int[] pos)

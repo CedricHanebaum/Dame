@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ISO;
+using tmp;
 
 namespace Draught
 {
-	class Control
+	class Control : ITickable
 	{
 		private Map m;
 		private List <Players> pList = new List<Players>();
@@ -13,11 +15,16 @@ namespace Draught
 		private Players act;
 		private RandomAI AI = null;
 		public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
-        private WindowsFormsApplication1.Loop l;
-        public Control(Map m, Players p1, Players p2, WindowsFormsApplication1.Loop l)
+        private Loop l;
+        private long delta = 0;
+        private int[] temp = null;
+        private Boolean wait = true;
+        public Control(Map m, Players p1, Players p2, Loop l)
 		{
 			this.m = m;
             this.l = l;
+            l.addToUpdateList(this);
+
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
@@ -25,12 +32,32 @@ namespace Draught
 			if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
 			{
 				errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);
-                return;
+				return;
 			}
 			pList.Add(p1);
 			pList.Add(p2);
 			act = pList.ElementAt(0);
+            AINext();
 		}
+
+        public void update(long delta)
+        {
+            this.delta += delta;
+            if (temp != null)
+            {
+                if (wait)
+                {
+                    this.delta = 0;
+                    wait = false;
+                }
+                if (this.delta >= 2000)
+                {
+                    checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
+                    temp = null;
+                }
+            }
+
+        }
 
 		// Methode zum Pruefen, ob Spieler Ai oder Human ist
 		private bool isHuman(Players p)
@@ -44,13 +71,13 @@ namespace Draught
 			return (p == Players.AIBlack || p == Players.HumanBlack);
 		}
 
-        private Token.PlayerColor getColor(Players p)
-        {
-            if (p == Players.AIBlack || p == Players.HumanBlack)
-                return Token.PlayerColor.Black;
-            else
-                return Token.PlayerColor.White;
-        }
+		private Token.PlayerColor getColor(Players p)
+		{
+			if (p == Players.AIBlack || p == Players.HumanBlack)
+				return Token.PlayerColor.Black;
+			else
+				return Token.PlayerColor.White;
+		}
 
 		//Methode zum Pruefen, ob ein Spieler die Moeglichkeit hat, weitere Zuege zu taetigen
 		private bool hasTurns(Players p, bool schlagzwang)
@@ -72,16 +99,16 @@ namespace Draught
 						temp = field[i, j];
 						posN = new int[]{ i, j };
 						int[,] possible = temp.nextStep(m, posN);
-                        for (int k = 0; k < possible.GetLength(0); k++)
-                        {
-                            for (int z = 0; z < possible.GetLength(1); z++)
-                            {
-                                if (possible[k, z] > -1 && !schlagzwang)
-                                    return true;
-                                else if (schlagzwang && possible[k, z] == 1)
-                                    return true;
-                            }
-                        }
+						for (int k = 0; k < possible.GetLength(0); k++)
+						{
+							for (int z = 0; z < possible.GetLength(1); z++)
+							{
+								if (possible[k, z] > -1 && !schlagzwang)
+									return true;
+								else if (schlagzwang && possible[k, z] == 1)
+									return true;
+							}
+						}
 					}
 				}
 			}
@@ -120,15 +147,22 @@ namespace Draught
 		}
 
 		// Prueft, ob ein uebergebener Zug moeglich ist, und laesst diesen ggf. ausfuehren
-		public void checkTurn(int[] posO, int[] posN)
+		public void checkTurn(int[] posO, int[] posN, bool automatic)
 		{
-			// Hole alle Moeglichkeiten
-			Token t = m.getToken(posO);
-            if (t == null || t.Color != getColor(act))
+            if (!isHuman(act) && !automatic)
             {
-                errorMessage("Ungueltigen Stein ausgewaehlt!", false);
+                errorMessage("Die KI ist am Zug!", false);
                 return;
             }
+            else if (automatic)
+                temp = null;
+			// Hole alle Moeglichkeiten
+			Token t = m.getToken(posO);
+			if (t == null || t.Color != getColor(act))
+			{
+				errorMessage("Ungueltigen Stein ausgewaehlt!", false);
+				return;
+			}
 			int[,] possible = t.nextStep(m,posO);
 			//Pruefe ob ein Schritt ausgefuehrt werden soll, bei dem Schlagzwang besteht
 			if (possible[posN[0], posN[1]] == 1)
@@ -141,10 +175,10 @@ namespace Draught
 					if (hasTurns(act,true))
 					{
 						errorMessage("Zug nicht moeglich, Schlagzwang beachten!", false);
-                        return;
+						return;
 					}
-                    // Wenn Alles okay, dann lasse den Zug ausfuehren
-                    doTurn(posN, posO, t, false);
+					// Wenn Alles okay, dann lasse den Zug ausfuehren
+					doTurn(posN, posO, t, false);
 			}
 			// Zug nicht moeglich, Exception wird geschmissen
 			else if (possible[posN[0], posN[1]] == -1)
@@ -154,7 +188,6 @@ namespace Draught
 		// Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
 		public void AINext()
 		{
-            //Console.ReadLine();
 			if (!isHuman(pList.ElementAt(index)))
 			{
 				Token.PlayerColor col = Token.PlayerColor.Black;
@@ -162,18 +195,19 @@ namespace Draught
 					col = Token.PlayerColor.White;
 				int[] pos = AI.ChooseToken(m,col);
 				int[] posN = AI.SetStep(m, col, pos);
-				checkTurn(pos, posN);
+                temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
+                wait = true;
 			}
 		}
 
-        public void errorMessage(String message, bool exit)
-        {
-            string caption = "Spielfehler";
-            System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
-            System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
-            if (exit)
-                l.exit();
-        }
+		public void errorMessage(String message, bool exit)
+		{
+			string caption = "Spielfehler";
+			System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
+			System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
+			if (exit)
+				l.exit();
+		}
 
 		// Methode zum ausfuehren genehmigter Spielzuege
 		public void doTurn(int[] posN, int[] posO, Token t, bool beaten)
@@ -198,27 +232,29 @@ namespace Draught
 			}
 			int diff = Math.Abs(posN[0]-posO[0])+1;
 			// Gehe mit Hilfe der Richtung den diagonalen Weg zum Zielfeld und entferne ggf. dort stehende Steine
-            List<int[]> removeList = new List<int[]>();
+			List<int[]> removeList = new List<int[]>();
 			for (int i = 1; i < diff; i++)
 			{
 				removeList.Add(new int[]{posO[0]+(i*direct[0]), posO[1]+(i*direct[1])});
 			}
 			// Fuehre die eigentliche Bewegung in der Map aus
-            removeList.Add(posO);
+			removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			// Wenn letzte Reihe, dann wird Stein zur Dame
+            bool draught = false;
 			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
 			{
+                draught = true;
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
 				m.AddToken(posN, d);
-                t = d;
+				t = d;
 				//Naechste Schritte der Dame sind andere als eines Steins
 			}
             m.RemoveToken(removeList);
             m.AddToken(posN, t);
             int[,] possNext = t.nextStep(m, posN);
-            if (beaten)
+            if (beaten&&!draught)
             {
                 for (int i = 0; i < possNext.GetLength(0); i++)
                 {
@@ -227,7 +263,7 @@ namespace Draught
                         if (possNext[i, j] == 1)
                         {
                             if (!isHuman(act))
-                                AINext();
+                               AINext();
                             return;
                         }
                     }
@@ -244,10 +280,10 @@ namespace Draught
 				else
 					tmp += "1 gewinnt!";
 				errorMessage(tmp, true);
-                return;
+				return;
 			}
-            if (!isHuman(act))
-                AINext();
+			if (!isHuman(act))
+				AINext();
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}
