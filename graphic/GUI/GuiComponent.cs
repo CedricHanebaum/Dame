@@ -25,7 +25,7 @@ namespace graphic.GUI {
 			return bounds.Contains(p);
 		}
 
-		protected int getID() {
+		public int getID() {
 			return id;
 		}
 
