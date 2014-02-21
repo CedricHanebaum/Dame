@@ -18,7 +18,8 @@ namespace Draught
         private Loop l;
         private long delta = 0;
         private int[] temp = null;
-        private Boolean wait = true;
+        private bool wait = true;
+        private bool msg = false;
         public Control(Map m, Players p1, Players p2, Loop l)
 		{
 			this.m = m;
@@ -43,19 +44,36 @@ namespace Draught
         public void update(long delta)
         {
             this.delta += delta;
+            if (wait)
+            {
+                this.delta = 0;
+                wait = false;
+            }
             if (temp != null)
             {
-                if (wait)
-                {
-                    this.delta = 0;
-                    wait = false;
-                }
-                if (this.delta >= 1500)
+                if (this.delta >= 700)
                 {
                     checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
                 }
             }
-
+            if (msg)
+            {
+                if (this.delta >= 1200)
+                {
+                    msg = false;
+                    if(!hasTurns(pList.ElementAt(0),false)&&!hasTurns(pList.ElementAt(1),false))
+                    {
+                        errorMessage("Das Spiel endet unentschieden!", true);
+                        return;
+                    }
+                    String tmp = "Spiel beendet, Spieler ";
+                    if (act == pList.ElementAt(0))
+                        tmp += "2 gewinnt!";
+                    else
+                        tmp += "1 gewinnt!";
+                    errorMessage(tmp, true);
+                }
+            }
         }
 
 		// Methode zum Pruefen, ob Spieler Ai oder Human ist
@@ -196,13 +214,17 @@ namespace Draught
 				int[] posN = AI.SetStep(m, col, pos);
                 wait = true;
                 temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
-                Console.WriteLine(temp.ToString());
 			}
 		}
 
 		public void errorMessage(String message, bool exit)
 		{
 			string caption = "Spielfehler";
+            if (exit)
+            {
+                caption = "GEWONNEN!";
+                // HIER: SPIELENDE, ZURUECK ZUM HAUPTMENUE
+            }
 			System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
 			System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
 			if (exit)
@@ -266,7 +288,6 @@ namespace Draught
                             if (!isHuman(act))
                             {
                                 AINext(posN);
-                                Console.WriteLine("KI darf nochmal");
                             }
                             return;
                         }
@@ -278,12 +299,8 @@ namespace Draught
 			// Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
 			if (!hasStones(act)||!hasTurns(act,false))
 			{
-				String tmp = "Spiel beendet, Spieler ";
-				if(act == pList.ElementAt(0))
-					tmp += "2 gewinnt!";
-				else
-					tmp += "1 gewinnt!";
-				errorMessage(tmp, true);
+                msg = true;
+                wait = true;
 				return;
 			}
 			if (!isHuman(act))

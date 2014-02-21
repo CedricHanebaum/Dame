@@ -12,8 +12,7 @@ namespace graphic.GUI {
 		private Loop loop;
 		private DrawManager drawManager;
 
-		// Gui declaration
-		// ...
+        Gui optionsGui;
 
 		private Gui activeGui;
 
@@ -22,15 +21,27 @@ namespace graphic.GUI {
 			this.drawManager = drawManager;
 			activeGui = null;
 
-			// add Guis to drawList
-			// ...
-
+            optionsGui = new Options(this);
+            drawManager.addDrawable(optionsGui);
+            loop.getForm().registerMouseListener(optionsGui);
 		}
+
+        public void showOptionsGui()
+        {
+            this.closeActiveGui();
+            activeGui = optionsGui;
+            optionsGui.setVisible(true);
+        }
 
 		public void closeActiveGui() {
 			if (activeGui != null) activeGui.setVisible(false);
 			activeGui = null;
 		}
+
+        public void startGame(int size, Draught.Control.Players p1, Draught.Control.Players p2)
+        {
+            loop.startGame(size, p1, p2);
+        }
 
 
 	}

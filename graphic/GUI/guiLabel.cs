@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace graphic.GUI
 {
@@ -41,18 +42,19 @@ namespace graphic.GUI
             this.font = font;
         }
 
-
-        public override void mouseClicked(Point p) { }
-
-
         public override void draw(Graphics g)
         {
             SolidBrush brush = new SolidBrush(color);
-            g.DrawString(text, font, brush, 0, 0);
+            g.DrawString(text, font, brush, bounds);
         }
 
+        public override void mouseClicked(MouseEventArgs e)
+        {
+        }
 
-        public override void mouseMoved(Point p) { }
+        public override void mouseMoved(MouseEventArgs e)
+        {
+        }
 
     }
 }

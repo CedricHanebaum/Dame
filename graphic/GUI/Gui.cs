@@ -13,7 +13,7 @@ namespace graphic.GUI {
 		private Bitmap background;
 		private Rectangle bounds;
 		private List<GuiComponent> componentsList = new List<GuiComponent>();
-		private GuiManager guiManager;
+		protected GuiManager guiManager;
 
 		public Gui(GuiManager guiManager): base(1) {
 			this.guiManager = guiManager;
@@ -35,7 +35,7 @@ namespace graphic.GUI {
 
 		public override void draw(Graphics g) {
 			if (visible) {
-				g.DrawImageUnscaled(background, bounds.Location);
+				//g.DrawImageUnscaled(background, bounds.Location);
 
 				foreach (GuiComponent c in componentsList) {
 					c.draw(g);
@@ -44,7 +44,7 @@ namespace graphic.GUI {
 		}
 
 		public void mouseMoved(MouseEventArgs e) {
-			if (bounds.Contains(e.Location) && visible) {
+            if (bounds.Contains(e.Location) && visible) {
 				foreach (var c in componentsList) {
 					c.mouseMoved(e);
 				}

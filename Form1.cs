@@ -51,8 +51,9 @@ namespace ISO{
         }
 
         private void panel1_MouseClick(object sender, MouseEventArgs e) {
-            foreach (var m in mouseListeners) {
-                m.mouseClicked(e);
+            for (int i = 0; i < mouseListeners.Count; ++i)
+            {
+                mouseListeners[i].mouseClicked(e);
             }
         }
 

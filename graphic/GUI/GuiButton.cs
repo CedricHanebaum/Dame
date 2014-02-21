@@ -16,7 +16,8 @@ namespace graphic.GUI {
 		private Font font;
 
 		public GuiButton(int id, Gui parent): base(id, parent) {
-
+            font = new Font("Arial", 12, FontStyle.Bold);
+            color = Color.Black;
 		}
 
 		public void setColor(Color color) {
@@ -30,12 +31,17 @@ namespace graphic.GUI {
 		public void setText(string text) {
 			this.text = text;
 		}
+        public void setImage(Bitmap b)
+        {
+            this.img = b;
+        }
 
 		public override void draw(Graphics g) {
-			g.DrawImageUnscaled(img, bounds.Location);
+			if(img!=null)g.DrawImageUnscaled(img, bounds.Location);
 			Brush brush = new SolidBrush(color);
 			PointF p = new PointF(bounds.X, bounds.Y + bounds.Height/2);
 			g.DrawString(text, font, brush, p);
+            g.DrawRectangle(new Pen(Color.Beige), bounds);
 			if (mouseOver) {
 				Brush transparentBrush = new SolidBrush(Color.FromArgb(200, 200, 200, 60));
 				g.FillRectangle(transparentBrush, bounds);

@@ -21,7 +21,7 @@ namespace graphic.GUI {
 		}
 
 		public void deactivateButtons() {
-			foreach (var r in radioButtons) {
+            foreach (var r in radioButtons) {
 				r.deactivate();
 			}
 
@@ -35,7 +35,7 @@ namespace graphic.GUI {
 
 			foreach (var r in radioButtons) {
 				if (r.getID() == id) {
-					r.activate();
+                    r.activate();
 				}
 			}
 

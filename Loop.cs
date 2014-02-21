@@ -24,8 +24,10 @@ namespace ISO {
 
 		private Bitmap buffer;
 		private DrawManager drawManager;
+        private GuiManager guiManager;
 
 		private World world;
+        private Map map;
 		private Draught.Control control;
 
 
@@ -34,6 +36,7 @@ namespace ISO {
 			this.buffer = new Bitmap(f.getPanelWidth(), f.getPanelWidth());
 
 			drawManager = new DrawManager();
+            guiManager = new GuiManager(this, drawManager);
 		}
 
 		public void doLoop() {
@@ -79,18 +82,8 @@ namespace ISO {
 			running = true;
 
 
-			Map map = new Map(8);
+            guiManager.showOptionsGui();
 
-			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.AIBlack, this);
-
-        //world = new World(1, 8, control, map);
-        //    world.setVisible(true);
-        //    drawManager.addDrawable(world);
-        //    f.registerMouseListener(world);
-            Gui optionen = new Options(new GuiManager(this,drawManager));
-            optionen.setVisible(true);
-            drawManager.addDrawable(optionen);
-            f.registerMouseListener(optionen);
 		}
 	   
 
@@ -109,6 +102,21 @@ namespace ISO {
 		private static long getCurrentTime() {
 			return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 		}
-	
-	}
+
+        public Form1 getForm()
+        {
+            return f;
+        }
+
+        internal void startGame(int size, Draught.Control.Players p1, Draught.Control.Players p2)
+        {
+            map = new Map(size);
+            control = new Draught.Control(map, p1, p2, this);
+            world = new World(1, size, control, map);
+            world.setVisible(true);
+            drawManager.addDrawable(world);
+            f.registerMouseListener(world);
+            guiManager.closeActiveGui();
+        }
+    }
 }
