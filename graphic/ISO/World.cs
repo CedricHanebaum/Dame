@@ -149,73 +149,75 @@ namespace ISO {
 		}
 
 		public override void draw(Graphics g) {
-			board.draw(g);
+			if (visible) {
+				board.draw(g);
 
-			for (int i = 0; i < tokens.GetLength(0); ++i) {
-				for (int j = 0; j < tokens.GetLength(1); ++j) {
+				for (int i = 0; i < tokens.GetLength(0); ++i) {
+					for (int j = 0; j < tokens.GetLength(1); ++j) {
 
-					Token3D token1;
-					Token3D token2;
+						Token3D token1;
+						Token3D token2;
 
-					GhostToken3D gToken1;
-					GhostToken3D gToken2;
+						GhostToken3D gToken1;
+						GhostToken3D gToken2;
 
-					Vector3D v1 = new Vector3D(0, 0, 10);
+						Vector3D v1 = new Vector3D(0, 0, 10);
 
-					Vector3D tokenPosRel = new Vector3D(48*i, 48*j, 0);
-					Vector3D tokenPosAbs = tokenBase + tokenPosRel;
+						Vector3D tokenPosRel = new Vector3D(48 * i, 48 * j, 0);
+						Vector3D tokenPosAbs = tokenBase + tokenPosRel;
 
-					switch (tokens[i, j]) {
-						case Token.Black:
-							token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
-							token1.draw(g);
-							break;
-						case Token.White:
-							token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
-							token1.draw(g);
-							break;
-						case Token.BlackDraugth:
-							token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
-							token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.Black);
+						switch (tokens[i, j]) {
+							case Token.Black:
+								token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
+								token1.draw(g);
+								break;
+							case Token.White:
+								token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
+								token1.draw(g);
+								break;
+							case Token.BlackDraugth:
+								token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.Black);
+								token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.Black);
 
-							token1.draw(g);
-							token2.draw(g);
+								token1.draw(g);
+								token2.draw(g);
 
-							break;
-						case Token.WhiteDraugth:
-							token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
-							token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.White);
+								break;
+							case Token.WhiteDraugth:
+								token1 = new Token3D(tokenPosAbs, Token3D.PlayerColor.White);
+								token2 = new Token3D(tokenPosAbs + v1, Token3D.PlayerColor.White);
 
-							token1.draw(g);
-							token2.draw(g);
+								token1.draw(g);
+								token2.draw(g);
 
-							break;
-						case Token.BlackGhost:
-							gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.Black);
-							gToken1.draw(g);
-							break;
-						case Token.WhiteGhost:
-							gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.White);
-							gToken1.draw(g);
-							break;
-						case Token.BlackDraugthGhost:
-							gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.Black);
-							gToken2 = new GhostToken3D(tokenPosAbs + v1, GhostToken3D.PlayerColor.Black);
-							
-							gToken1.draw(g);
-							gToken2.draw(g);
-							break;
-						case Token.WhiteDraugthGhost:
-							gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.White);
-							gToken2 = new GhostToken3D(tokenPosAbs + v1, GhostToken3D.PlayerColor.White);
+								break;
+							case Token.BlackGhost:
+								gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.Black);
+								gToken1.draw(g);
+								break;
+							case Token.WhiteGhost:
+								gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.White);
+								gToken1.draw(g);
+								break;
+							case Token.BlackDraugthGhost:
+								gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.Black);
+								gToken2 = new GhostToken3D(tokenPosAbs + v1, GhostToken3D.PlayerColor.Black);
 
-							gToken1.draw(g);
-							gToken2.draw(g);
-							break;
-						case Token.empty:
-							break;
+								gToken1.draw(g);
+								gToken2.draw(g);
+								break;
+							case Token.WhiteDraugthGhost:
+								gToken1 = new GhostToken3D(tokenPosAbs, GhostToken3D.PlayerColor.White);
+								gToken2 = new GhostToken3D(tokenPosAbs + v1, GhostToken3D.PlayerColor.White);
+
+								gToken1.draw(g);
+								gToken2.draw(g);
+								break;
+							case Token.empty:
+								break;
+						}
+
 					}
-
 				}
 			}
 		}

@@ -83,6 +83,7 @@ namespace ISO {
 			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.AIBlack, this);
 
 			world = new World(1, 8, control, map);
+			world.setVisible(true);
 			drawManager.addDrawable(world);
 			f.registerMouseListener(world);
 		}
