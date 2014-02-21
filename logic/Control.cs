@@ -241,8 +241,10 @@ namespace Draught
 			removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			// Wenn letzte Reihe, dann wird Stein zur Dame
+            bool draught = false;
 			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
 			{
+                draught = true;
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
 				m.AddToken(posN, d);
@@ -252,7 +254,7 @@ namespace Draught
             m.RemoveToken(removeList);
             m.AddToken(posN, t);
             int[,] possNext = t.nextStep(m, posN);
-            if (beaten)
+            if (beaten&&!draught)
             {
                 for (int i = 0; i < possNext.GetLength(0); i++)
                 {
