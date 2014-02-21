@@ -7,10 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using Draughts;
-using tmp.graphic;
+using graphic;
 
-namespace WindowsFormsApplication1{
+namespace ISO{
 
     public partial class Form1 : Form {
 

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WindowsFormsApplication1;
+using ISO;
 using System.Drawing;
 
-namespace tmp.graphic {
+namespace ISO {
 
 	class Line3D {
 

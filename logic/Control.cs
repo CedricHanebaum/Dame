@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ISO;
+using tmp;
 
 namespace Draught
 {
@@ -13,15 +15,16 @@ namespace Draught
 		private Players act;
 		private RandomAI AI = null;
 		public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
-        private WindowsFormsApplication1.Loop l;
+        private Loop l;
         private long delta = 0;
         private int[] temp = null;
         private Boolean wait = true;
-        public Control(Map m, Players p1, Players p2, WindowsFormsApplication1.Loop l)
+        public Control(Map m, Players p1, Players p2, Loop l)
 		{
 			this.m = m;
             this.l = l;
             l.addToUpdateList(this);
+
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
@@ -29,7 +32,7 @@ namespace Draught
 			if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
 			{
 				errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);
-                return;
+				return;
 			}
 			pList.Add(p1);
 			pList.Add(p2);
@@ -68,13 +71,13 @@ namespace Draught
 			return (p == Players.AIBlack || p == Players.HumanBlack);
 		}
 
-        private Token.PlayerColor getColor(Players p)
-        {
-            if (p == Players.AIBlack || p == Players.HumanBlack)
-                return Token.PlayerColor.Black;
-            else
-                return Token.PlayerColor.White;
-        }
+		private Token.PlayerColor getColor(Players p)
+		{
+			if (p == Players.AIBlack || p == Players.HumanBlack)
+				return Token.PlayerColor.Black;
+			else
+				return Token.PlayerColor.White;
+		}
 
 		//Methode zum Pruefen, ob ein Spieler die Moeglichkeit hat, weitere Zuege zu taetigen
 		private bool hasTurns(Players p, bool schlagzwang)
@@ -96,16 +99,16 @@ namespace Draught
 						temp = field[i, j];
 						posN = new int[]{ i, j };
 						int[,] possible = temp.nextStep(m, posN);
-                        for (int k = 0; k < possible.GetLength(0); k++)
-                        {
-                            for (int z = 0; z < possible.GetLength(1); z++)
-                            {
-                                if (possible[k, z] > -1 && !schlagzwang)
-                                    return true;
-                                else if (schlagzwang && possible[k, z] == 1)
-                                    return true;
-                            }
-                        }
+						for (int k = 0; k < possible.GetLength(0); k++)
+						{
+							for (int z = 0; z < possible.GetLength(1); z++)
+							{
+								if (possible[k, z] > -1 && !schlagzwang)
+									return true;
+								else if (schlagzwang && possible[k, z] == 1)
+									return true;
+							}
+						}
 					}
 				}
 			}
@@ -155,11 +158,11 @@ namespace Draught
                 temp = null;
 			// Hole alle Moeglichkeiten
 			Token t = m.getToken(posO);
-            if (t == null || t.Color != getColor(act))
-            {
-                errorMessage("Ungueltigen Stein ausgewaehlt!", false);
-                return;
-            }
+			if (t == null || t.Color != getColor(act))
+			{
+				errorMessage("Ungueltigen Stein ausgewaehlt!", false);
+				return;
+			}
 			int[,] possible = t.nextStep(m,posO);
 			//Pruefe ob ein Schritt ausgefuehrt werden soll, bei dem Schlagzwang besteht
 			if (possible[posN[0], posN[1]] == 1)
@@ -172,10 +175,10 @@ namespace Draught
 					if (hasTurns(act,true))
 					{
 						errorMessage("Zug nicht moeglich, Schlagzwang beachten!", false);
-                        return;
+						return;
 					}
-                    // Wenn Alles okay, dann lasse den Zug ausfuehren
-                    doTurn(posN, posO, t, false);
+					// Wenn Alles okay, dann lasse den Zug ausfuehren
+					doTurn(posN, posO, t, false);
 			}
 			// Zug nicht moeglich, Exception wird geschmissen
 			else if (possible[posN[0], posN[1]] == -1)
@@ -197,14 +200,14 @@ namespace Draught
 			}
 		}
 
-        public void errorMessage(String message, bool exit)
-        {
-            string caption = "Spielfehler";
-            System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
-            System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
-            if (exit)
-                l.exit();
-        }
+		public void errorMessage(String message, bool exit)
+		{
+			string caption = "Spielfehler";
+			System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
+			System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
+			if (exit)
+				l.exit();
+		}
 
 		// Methode zum ausfuehren genehmigter Spielzuege
 		public void doTurn(int[] posN, int[] posO, Token t, bool beaten)
@@ -229,13 +232,13 @@ namespace Draught
 			}
 			int diff = Math.Abs(posN[0]-posO[0])+1;
 			// Gehe mit Hilfe der Richtung den diagonalen Weg zum Zielfeld und entferne ggf. dort stehende Steine
-            List<int[]> removeList = new List<int[]>();
+			List<int[]> removeList = new List<int[]>();
 			for (int i = 1; i < diff; i++)
 			{
 				removeList.Add(new int[]{posO[0]+(i*direct[0]), posO[1]+(i*direct[1])});
 			}
 			// Fuehre die eigentliche Bewegung in der Map aus
-            removeList.Add(posO);
+			removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			// Wenn letzte Reihe, dann wird Stein zur Dame
 			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
@@ -243,7 +246,7 @@ namespace Draught
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
 				m.AddToken(posN, d);
-                t = d;
+				t = d;
 				//Naechste Schritte der Dame sind andere als eines Steins
 			}
             m.RemoveToken(removeList);
@@ -275,10 +278,10 @@ namespace Draught
 				else
 					tmp += "1 gewinnt!";
 				errorMessage(tmp, true);
-                return;
+				return;
 			}
-            if (!isHuman(act))
-                AINext();
+			if (!isHuman(act))
+				AINext();
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}

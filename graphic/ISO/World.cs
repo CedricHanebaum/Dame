@@ -5,11 +5,11 @@ using System.Text;
 using System.Drawing;
 using Draught;
 using System.Windows.Forms;
+using graphic;
 using Draught;
-using Draughts;
-using tmp.graphic;
+using graphic;
 
-namespace WindowsFormsApplication1 {
+namespace ISO {
 	
 	
 	class World: Drawable, IMouseNoticeable, IMap 
