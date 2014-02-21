@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace graphic
+namespace graphic.GUI
 {
     class GuiLabel : GuiComponent
     {
@@ -14,9 +14,9 @@ namespace graphic
         private Font font;
 
 
-        public GuiLabel(int ID, Gui parent)
+        public GuiLabel(int ID, Gui parent): base(ID, parent)
         {
-            base(ID, parent);
+            
             color = Color.Black;
             font = new Font("", 12);
         }
