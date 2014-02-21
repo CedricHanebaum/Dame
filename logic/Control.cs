@@ -37,7 +37,7 @@ namespace Draught
 			pList.Add(p1);
 			pList.Add(p2);
 			act = pList.ElementAt(0);
-            AINext();
+            AINext(null);
 		}
 
         public void update(long delta)
@@ -50,10 +50,9 @@ namespace Draught
                     this.delta = 0;
                     wait = false;
                 }
-                if (this.delta >= 2000)
+                if (this.delta >= 1500)
                 {
                     checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
-                    temp = null;
                 }
             }
 
@@ -186,17 +185,18 @@ namespace Draught
 		}
 
 		// Methode wird von aussen aufgerufen um naechsten Zug auszufuehren, wenn AI an der Reihe ist.
-		public void AINext()
+		public void AINext(int[] pos)
 		{
 			if (!isHuman(pList.ElementAt(index)))
 			{
 				Token.PlayerColor col = Token.PlayerColor.Black;
 				if(!isBlack(pList.ElementAt(index)))
 					col = Token.PlayerColor.White;
-				int[] pos = AI.ChooseToken(m,col);
+				if(pos==null) pos = AI.ChooseToken(m,col);
 				int[] posN = AI.SetStep(m, col, pos);
-                temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
                 wait = true;
+                temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
+                Console.WriteLine(temp.ToString());
 			}
 		}
 
@@ -254,6 +254,7 @@ namespace Draught
             m.RemoveToken(removeList);
             m.AddToken(posN, t);
             int[,] possNext = t.nextStep(m, posN);
+            if (beaten) temp = null;
             if (beaten&&!draught)
             {
                 for (int i = 0; i < possNext.GetLength(0); i++)
@@ -263,7 +264,10 @@ namespace Draught
                         if (possNext[i, j] == 1)
                         {
                             if (!isHuman(act))
-                               AINext();
+                            {
+                                AINext(posN);
+                                Console.WriteLine("KI darf nochmal");
+                            }
                             return;
                         }
                     }
@@ -283,7 +287,7 @@ namespace Draught
 				return;
 			}
 			if (!isHuman(act))
-				AINext();
+				AINext(null);
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}
