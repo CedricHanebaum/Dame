@@ -19,6 +19,10 @@ namespace graphic.GUI {
 			this.guiManager = guiManager;
 		}
 
+		public Gui(GuiManager guiManager, int priority): base(priority) {
+			this.guiManager = guiManager;
+		}
+
 		public void setBackground(Bitmap background) {
 			this.background = background;
 		}
@@ -35,7 +39,10 @@ namespace graphic.GUI {
 
 		public override void draw(Graphics g) {
 			if (visible) {
-				//g.DrawImageUnscaled(background, bounds.Location);
+				if(background != null) g.DrawImageUnscaled(background, bounds.Location);
+
+				g.DrawRectangle(new Pen(Color.Black), bounds);
+
 
 				foreach (GuiComponent c in componentsList) {
 					c.draw(g);
@@ -44,7 +51,7 @@ namespace graphic.GUI {
 		}
 
 		public void mouseMoved(MouseEventArgs e) {
-            if (bounds.Contains(e.Location) && visible) {
+			if (bounds.Contains(e.Location) && visible) {
 				foreach (var c in componentsList) {
 					c.mouseMoved(e);
 				}

@@ -13,6 +13,7 @@ namespace graphic.GUI {
 		private DrawManager drawManager;
 
 		Gui optionsGui;
+		Gui inGameLabel;
 
 		private Gui activeGui;
 
@@ -24,6 +25,9 @@ namespace graphic.GUI {
 			optionsGui = new Options(this);
 			drawManager.addDrawable(optionsGui);
 			loop.getForm().registerMouseListener(optionsGui);
+
+			inGameLabel = new InGameLabel(this, 2);
+			drawManager.addDrawable(inGameLabel);
 		}
 
 		public void showOptionsGui() {
@@ -32,13 +36,24 @@ namespace graphic.GUI {
 			optionsGui.setVisible(true);
 		}
 
+		public void showInGameLable() {
+			this.closeActiveGui();
+			activeGui = inGameLabel;
+			inGameLabel.setVisible(true);
+		}
+
 		public void closeActiveGui() {
 			if (activeGui != null) activeGui.setVisible(false);
 			activeGui = null;
 		}
 
+		public void setInGameLableText(string text) {
+			((InGameLabel)this.inGameLabel).setText(text);
+		}
+
 		public void startGame(int size, Draught.Control.Players p1, Draught.Control.Players p2) {
 			loop.startGame(size, p1, p2);
+			this.showInGameLable();
 		}
 
 		public void closeGame() {

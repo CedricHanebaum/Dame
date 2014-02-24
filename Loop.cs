@@ -86,9 +86,12 @@ namespace ISO {
 
 		}
 	   
-
 		public DrawManager getDrawManager() {
 			return drawManager;
+		}
+
+		public GuiManager getGuiManager() {
+			return guiManager;
 		}
 
 		public void addToUpdateList(ITickable t) {

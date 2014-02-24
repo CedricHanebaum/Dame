@@ -40,7 +40,7 @@ namespace graphic.GUI {
 
 
             startB.setBounds(new Rectangle(100,0,300,100));
-             startB.setImage(new Bitmap("../go.bmp"));
+            startB.setImage(new Bitmap("../go.bmp"));
             startB.setText("Start Game");
             this.addComponent(startB);
 
