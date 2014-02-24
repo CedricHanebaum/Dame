@@ -226,16 +226,16 @@ namespace Draught
 
 		public void errorMessage(String message, bool exit)
 		{
-			string caption = "Spielfehler";
-			if (exit)
-			{
-				caption = "GEWONNEN!";
-				// HIER: SPIELENDE, ZURUECK ZUM HAUPTMENUE
-			}
-			System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
-			System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
-			if (exit)
-				l.exit();
+
+            if (exit)
+            {
+               string caption = "GEWONNEN!";
+               System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
+               System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
+                // HIER: SPIELENDE, ZURUECK ZUM HAUPTMENUE
+            } else
+            l.getGuiManager().setInGameLableText(message);
+            if (exit) { l.exit();}
 		}
 
 		// Methode zum ausfuehren genehmigter Spielzuege

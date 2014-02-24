@@ -16,7 +16,7 @@ namespace graphic.GUI {
 		private Font font;
 
 		public GuiButton(int id, Gui parent): base(id, parent) {
-            font = new Font("Arial", 12, FontStyle.Bold);
+            font = new Font("Arial", 16, FontStyle.Italic);
             color = Color.Black;
 		}
 
