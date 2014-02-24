@@ -233,9 +233,9 @@ namespace Draught
                System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
                System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
                 // HIER: SPIELENDE, ZURUECK ZUM HAUPTMENUE
+               l.exit();
             } else
             l.getGuiManager().setInGameLableText(message);
-            if (exit) { l.exit();}
 		}
 
 		// Methode zum ausfuehren genehmigter Spielzuege
