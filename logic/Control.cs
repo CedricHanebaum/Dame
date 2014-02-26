@@ -25,12 +25,10 @@ namespace Draught
 			this.m = m;
 			this.l = l;
 			l.addToUpdateList(this);
-
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
 			}
-
 			//if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
 			//{
 			//    errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);

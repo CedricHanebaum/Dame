@@ -118,7 +118,7 @@ namespace graphic.GUI {
                     return new Draught.Intelligence("AI");
                 default:
                     return new Draught.Intelligence("Human");
-            }
+           }
         }
     }
 }

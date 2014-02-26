@@ -61,7 +61,7 @@ namespace graphic.GUI {
 		public void mouseClicked(MouseEventArgs e) {
             if (bounds.Contains(e.Location) && visible)
             {
-				foreach (var c in componentsList) {
+    			foreach (var c in componentsList) {
 					c.mouseClicked(e);
 				}
 			}

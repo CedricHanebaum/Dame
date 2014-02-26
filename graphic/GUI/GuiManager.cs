@@ -61,6 +61,4 @@ namespace graphic.GUI {
 			loop.exit();
 		}
         }
-
-
 }

@@ -11,6 +11,7 @@ namespace ISO
 	{
 
         private static Form1 f;
+        private static Thread t;
 
 		static void Main(string[] args) 
 		{
@@ -19,14 +20,15 @@ namespace ISO
 
 			f = new Form1();
 			Loop l = new Loop(f);
-			Thread t1 = new Thread(l.doLoop);
-			t1.Start();
+			t = new Thread(l.doLoop);
+			t.Start();
 
 			Application.Run(f);
 		}
 
         public static void exit()
         {
+            t.Join();
             f.Close();
         }
 	}
