@@ -10,76 +10,102 @@ namespace Draught
 	class Control : ITickable
 	{
 		private Map m;
-		private List <Players> pList = new List<Players>();
+        private List<Intelligence> pList = new List<Intelligence>();
 		private short index = 0;
-		private Players act;
+        private Intelligence act;
 		private RandomAI AI = null;
-		public enum Players { AIBlack, AIWhite, HumanBlack, HumanWhite };
-        private Loop l;
-        private long delta = 0;
-        private int[] temp = null;
-        private Boolean wait = true;
-        public Control(Map m, Players p1, Players p2, Loop l)
+		private Loop l;
+		private long delta = 0;
+		public int[] temp = null;
+        private int[] posAI;
+		private bool wait = true;
+		private bool msg = false;
+        public Control(Map m, Intelligence p1, Intelligence p2, Loop l)
 		{
 			this.m = m;
-            this.l = l;
-            l.addToUpdateList(this);
+			this.l = l;
+			l.addToUpdateList(this);
 
 			if (!isHuman(p1) || !isHuman(p2))
 			{
 				AI = new RandomAI(); 
 			}
-			if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
-			{
-				errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);
-				return;
-			}
+
+			//if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
+			//{
+			//    errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);
+			//    return;
+			//}
+            p1.Black = true;
 			pList.Add(p1);
+            p2.Black = false;
 			pList.Add(p2);
 			act = pList.ElementAt(0);
-            AINext(null);
+			AINext(null);
 		}
 
-        public void update(long delta)
-        {
-            this.delta += delta;
-            if (temp != null)
-            {
-                if (wait)
-                {
-                    this.delta = 0;
-                    wait = false;
-                }
-                if (this.delta >= 1500)
-                {
-                    checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
-                }
-            }
-
-        }
+		public void update(long delta)
+		{
+			this.delta += delta;
+			if (wait)
+			{
+				this.delta = 0;
+				wait = false;
+			}
+			if (temp != null)
+			{
+				if (this.delta >= 1000)
+				{
+                    Token.PlayerColor col = Token.PlayerColor.Black;
+                    if (!isBlack(pList.ElementAt(index)))
+                        col = Token.PlayerColor.White;
+                    if (posAI == null) posAI = AI.ChooseToken(m, col, new List<int[]>());
+                    int[] posN = AI.SetStep(m, col, posAI, 0, this, new List<int[]>());
+					checkTurn(new int[] { temp[0], temp[1] }, new int[] { temp[2], temp[3] }, true);
+				}
+			}
+			if (msg)
+			{
+				if (this.delta >= 1200)
+				{
+					msg = false;
+					if(!hasTurns(pList.ElementAt(0),false)&&!hasTurns(pList.ElementAt(1),false))
+					{
+						errorMessage("Das Spiel endet unentschieden!", true);
+						return;
+					}
+					String tmp = "Spiel beendet, Spieler ";
+					if (act == pList.ElementAt(0))
+						tmp += "2 gewinnt!";
+					else
+						tmp += "1 gewinnt!";
+					errorMessage(tmp, true);
+				}
+			}
+		}
 
 		// Methode zum Pruefen, ob Spieler Ai oder Human ist
-		private bool isHuman(Players p)
+        private bool isHuman(Intelligence p)
 		{
-			return (p == Players.HumanBlack || p == Players.HumanWhite);
+			return p.Type == "Human";
 		}
 
 		// Methode zum Pruefen, ob Spieler schwarze oder weisse Steine hat
-		private bool isBlack(Players p)
+        private bool isBlack(Intelligence p)
 		{
-			return (p == Players.AIBlack || p == Players.HumanBlack);
+			return this.getColor(p) == Token.PlayerColor.Black;
 		}
 
-		private Token.PlayerColor getColor(Players p)
+        private Token.PlayerColor getColor(Intelligence p)
 		{
-			if (p == Players.AIBlack || p == Players.HumanBlack)
+			if (p.Black)
 				return Token.PlayerColor.Black;
 			else
 				return Token.PlayerColor.White;
 		}
 
 		//Methode zum Pruefen, ob ein Spieler die Moeglichkeit hat, weitere Zuege zu taetigen
-		private bool hasTurns(Players p, bool schlagzwang)
+        private bool hasTurns(Intelligence p, bool schlagzwang)
 		{
 			Token.PlayerColor col = Token.PlayerColor.Black;
 			if (!isBlack(p))
@@ -115,7 +141,7 @@ namespace Draught
 		}
 
 		// Methode prueft, ob ein Spieler noch Steine auf dem Feld hat
-		private bool hasStones(Players p)
+        private bool hasStones(Intelligence p)
 		{
 			Token.PlayerColor col = Token.PlayerColor.Black;
 			if(!isBlack(p))
@@ -135,7 +161,7 @@ namespace Draught
 		}
 
 		// Dient zum Durchlaufen der Spielerliste im Rahmen der Spielverwaltung, gibt den Spieler zurueck, der als naechstes an der Reihe ist
-		public Players changeIndex()
+        public Intelligence changeIndex()
 		{
 			short value = (short)(index + 1);
 			if (value >= pList.Count())
@@ -148,13 +174,13 @@ namespace Draught
 		// Prueft, ob ein uebergebener Zug moeglich ist, und laesst diesen ggf. ausfuehren
 		public void checkTurn(int[] posO, int[] posN, bool automatic)
 		{
-            if (!isHuman(act) && !automatic)
-            {
-                errorMessage("Die KI ist am Zug!", false);
-                return;
-            }
-            else if (automatic)
-                temp = null;
+			if (!isHuman(act) && !automatic)
+			{
+				errorMessage("Die KI ist am Zug!", false);
+				return;
+			}
+			else if (automatic)
+				temp = null;
 			// Hole alle Moeglichkeiten
 			Token t = m.getToken(posO);
 			if (t == null || t.Color != getColor(act))
@@ -168,7 +194,7 @@ namespace Draught
 			{
 				doTurn(posN, posO, t, true);
 			}
-			// Falls ein anderer zug ausgefuehrt wird pruefe, ob nicht doch Schlagzwang besteht
+			// Falls ein anderer Zug ausgefuehrt wird pruefe, ob nicht doch Schlagzwang besteht
 			else if (possible[posN[0], posN[1]] == 0)
 			{
 					if (hasTurns(act,true))
@@ -189,29 +215,30 @@ namespace Draught
 		{
 			if (!isHuman(pList.ElementAt(index)))
 			{
-				Token.PlayerColor col = Token.PlayerColor.Black;
-				if(!isBlack(pList.ElementAt(index)))
-					col = Token.PlayerColor.White;
-				if(pos==null) pos = AI.ChooseToken(m,col);
-				int[] posN = AI.SetStep(m, col, pos);
-                wait = true;
-                temp = new int[] { pos[0], pos[1], posN[0], posN[1] };
-                Console.WriteLine(temp.ToString());
+                errorMessage("Die KI berechnet ihren nächsten Zug..", false);
+                posAI = pos;
+				wait = true;
+                if(temp==null) temp = new int[]{1};
 			}
 		}
 
 		public void errorMessage(String message, bool exit)
 		{
-			string caption = "Spielfehler";
-			System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
-			System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
-			if (exit)
-				l.exit();
+            if (exit)
+            {
+               string caption = "GEWONNEN!";
+               System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.OK;
+               System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show(message, caption, buttons);
+                // HIER: SPIELENDE, ZURUECK ZUM HAUPTMENUE
+               l.showMainMenu();
+            } else
+            l.getGuiManager().setInGameLableText(message);
 		}
 
 		// Methode zum ausfuehren genehmigter Spielzuege
 		public void doTurn(int[] posN, int[] posO, Token t, bool beaten)
 		{
+            l.getGuiManager().setInGameLableText("");
 			// Pruefe zunaechst, in welche Richtung die Figur bewegt werden soll
 			int[] direct = new int[2];
 			if (posN[0] < posO[0])
@@ -241,53 +268,50 @@ namespace Draught
 			removeList.Add(posO);
 			// Importiere die moeglichen naechsten Schritte zur Ueberpruefung, ob das Spiel fortgesetzt werden kann
 			// Wenn letzte Reihe, dann wird Stein zur Dame
-            bool draught = false;
+			bool draught = false;
 			if (((!isBlack(act) && posN[1] == 0) || (isBlack(act) && posN[1] == m.Field.GetLength(0)-1)) && t.Tok=="stone")
 			{
-                draught = true;
+				draught = true;
 				Draught d = new Draught(t.Color);
 				removeList.Add(posN);
 				m.AddToken(posN, d);
 				t = d;
 				//Naechste Schritte der Dame sind andere als eines Steins
 			}
-            m.RemoveToken(removeList);
-            m.AddToken(posN, t);
-            int[,] possNext = t.nextStep(m, posN);
-            if (beaten) temp = null;
-            if (beaten&&!draught)
-            {
-                for (int i = 0; i < possNext.GetLength(0); i++)
-                {
-                    for (int j = 0; j < possNext.GetLength(1); j++)
-                    {
-                        if (possNext[i, j] == 1)
-                        {
-                            if (!isHuman(act))
-                            {
-                                AINext(posN);
-                                Console.WriteLine("KI darf nochmal");
-                            }
-                            return;
-                        }
-                    }
-                }
-            }
+			m.RemoveToken(removeList);
+			m.AddToken(posN, t);
+			int[,] possNext = t.nextStep(m, posN);
+			if (beaten) temp = null;
+			if (beaten&&!draught)
+			{
+				for (int i = 0; i < possNext.GetLength(0); i++)
+				{
+					for (int j = 0; j < possNext.GetLength(1); j++)
+					{
+						if (possNext[i, j] == 1)
+						{
+							if (!isHuman(act))
+							{
+								AINext(posN);
+							}
+							return;
+						}
+					}
+				}
+			}
 			// Weiter zum naechsten Spieler
 			act = changeIndex();
 			// Wenn naechster Spieler keine Figuren oder moegliche zuege mehr hat, dann ist das Spiel beendet.
 			if (!hasStones(act)||!hasTurns(act,false))
 			{
-				String tmp = "Spiel beendet, Spieler ";
-				if(act == pList.ElementAt(0))
-					tmp += "2 gewinnt!";
-				else
-					tmp += "1 gewinnt!";
-				errorMessage(tmp, true);
+				msg = true;
+				wait = true;
 				return;
 			}
-			if (!isHuman(act))
-				AINext(null);
+            if (!isHuman(act))
+                AINext(null);
+            else
+                errorMessage("Sie sind am Zug!", false);
 			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}

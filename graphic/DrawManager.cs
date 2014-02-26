@@ -12,8 +12,9 @@ namespace graphic {
         private List<Drawable> drawList = new List<Drawable>();
 
         public void draw(Graphics g) {
-            foreach (var d in drawList) {
-                d.draw(g);
+            for (int i = 0; i < drawList.Count; ++i )
+            {
+                drawList[i].draw(g);
             }
         }
 

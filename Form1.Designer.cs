@@ -49,8 +49,8 @@ namespace ISO
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1016, 734);
             this.Controls.Add(this.panel1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Dame";
+            this.Text = "Dame";
             this.ResumeLayout(false);
 
         }

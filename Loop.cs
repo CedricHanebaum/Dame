@@ -9,6 +9,7 @@ using Draught;
 using System.Diagnostics;
 using tmp;
 using graphic;
+using graphic.GUI;
 
 namespace ISO {
 	
@@ -23,8 +24,10 @@ namespace ISO {
 
 		private Bitmap buffer;
 		private DrawManager drawManager;
+		private GuiManager guiManager;
 
 		private World world;
+		private Map map;
 		private Draught.Control control;
 
 
@@ -33,6 +36,7 @@ namespace ISO {
 			this.buffer = new Bitmap(f.getPanelWidth(), f.getPanelWidth());
 
 			drawManager = new DrawManager();
+			guiManager = new GuiManager(this, drawManager);
 		}
 
 		public void doLoop() {
@@ -43,7 +47,7 @@ namespace ISO {
 				this.calcDelta();
 				Thread.Sleep(30);
 			}
-			this.close();
+            this.close();
 		}
 
 		private void calcDelta() {
@@ -78,18 +82,16 @@ namespace ISO {
 			running = true;
 
 
-			Map map = new Map(8);
+			guiManager.showOptionsGui();
 
-			control = new Draught.Control(map, Draught.Control.Players.HumanWhite, Draught.Control.Players.AIBlack, this);
-
-			world = new World(1, 8, control, map);
-			drawManager.addDrawable(world);
-			f.registerMouseListener(world);
 		}
 	   
-
 		public DrawManager getDrawManager() {
 			return drawManager;
+		}
+
+		public GuiManager getGuiManager() {
+			return guiManager;
 		}
 
 		public void addToUpdateList(ITickable t) {
@@ -98,11 +100,33 @@ namespace ISO {
 
 		public void exit() {
 			this.running = false;
+            Program.exit();
 		}
 
 		private static long getCurrentTime() {
 			return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 		}
-	
+
+		public Form1 getForm()
+		{
+			return f;
+		}
+
+        internal void startGame(int size, Draught.Intelligence p1, Draught.Intelligence p2)
+		{
+			map = new Map(size);
+			control = new Draught.Control(map, p1, p2, this);
+			world = new World(1, size, control, map);
+			world.setVisible(true);
+			drawManager.addDrawable(world);
+			f.registerMouseListener(world);
+			guiManager.closeActiveGui();
+		}
+
+        public void showMainMenu()
+        {
+            if (world != null) world.setVisible(false);
+            guiManager.showOptionsGui();
+        }
 	}
 }
