@@ -29,7 +29,7 @@ namespace Draught
 			{
 				AI = new RandomAI(); 
 			}
-            p1.Color = Intelligence.eColor.black; ;
+            p1.Color = Intelligence.eColor.black;
 			pList.Add(p1);
             p2.Color = Intelligence.eColor.white;
 			pList.Add(p2);
@@ -303,9 +303,14 @@ namespace Draught
 			}
             if (!isHuman(act))
                 AINext(null);
-            else
-                errorMessage("Sie sind am Zug!", false);
-			// BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
+            else {
+                if (act.Color == Intelligence.eColor.white) {
+                    errorMessage("Spieler 2 ist am Zug!", false);
+                } else {
+                    errorMessage("Spieler 1 ist am Zug!", false);
+                }
+            }
+            // BEI AI WARTE AUF AUFRUF VON AI_NEXT(), sonst warte auf Aufruf von checkTurn bei Klick von Benutzer
 		}
 	}
 }
