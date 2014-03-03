@@ -13,6 +13,8 @@ namespace graphic.GUI {
 
         public Options(GuiManager guimanager): base(guimanager) {
             this.setBounds(new Rectangle(0, 0, 1024, 768));
+            this.setBackground(new Bitmap("../bg.bmp"));
+
             GuiButton startB = new GuiButton(6,this);
             GuiButton endB = new GuiButton(7, this);
 
@@ -102,7 +104,6 @@ namespace graphic.GUI {
                     guiManager.startGame(size, p1, p2);
                     break;
                 case 7:
-                    Console.WriteLine("Sieben");
                     guiManager.closeGame();
                     break;
             }
@@ -112,12 +113,12 @@ namespace graphic.GUI {
             switch(buttonID){
                 case 0: goto case 2;
                 case 2:
-                    return new Draught.Intelligence("Human");
+                    return new Draught.Intelligence(Draught.Intelligence.eType.human);
                 case 1: goto case 3;
                 case 3:
-                    return new Draught.Intelligence("AI");
+                    return new Draught.Intelligence(Draught.Intelligence.eType.ai);
                 default:
-                    return new Draught.Intelligence("Human");
+                    return new Draught.Intelligence(Draught.Intelligence.eType.human);
            }
         }
     }

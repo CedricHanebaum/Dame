@@ -29,14 +29,9 @@ namespace Draught
 			{
 				AI = new RandomAI(); 
 			}
-			//if (p1 == p2 || (isBlack(p1) && isBlack(p2)) || (!isBlack(p1) && !isBlack(p2)))
-			//{
-			//    errorMessage("Zwei gleiche Spieler uebergeben, oder keine unterschiedliche Farbe!", true);
-			//    return;
-			//}
-            p1.Black = true;
+            p1.Color = Intelligence.eColor.black; ;
 			pList.Add(p1);
-            p2.Black = false;
+            p2.Color = Intelligence.eColor.white;
 			pList.Add(p2);
 			act = pList.ElementAt(0);
 			AINext(null);
@@ -85,7 +80,7 @@ namespace Draught
 		// Methode zum Pruefen, ob Spieler Ai oder Human ist
         private bool isHuman(Intelligence p)
 		{
-			return p.Type == "Human";
+			return p.Type == Intelligence.eType.human;
 		}
 
 		// Methode zum Pruefen, ob Spieler schwarze oder weisse Steine hat
@@ -96,7 +91,7 @@ namespace Draught
 
         private Token.PlayerColor getColor(Intelligence p)
 		{
-			if (p.Black)
+			if (p.Color == Intelligence.eColor.black)
 				return Token.PlayerColor.Black;
 			else
 				return Token.PlayerColor.White;

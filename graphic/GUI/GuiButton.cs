@@ -43,7 +43,7 @@ namespace graphic.GUI {
 			g.DrawString(text, font, brush, p);
             g.DrawRectangle(new Pen(Color.Beige), bounds);
 			if (mouseOver) {
-				Brush transparentBrush = new SolidBrush(Color.FromArgb(200, 200, 200, 60));
+				Brush transparentBrush = new SolidBrush(Color.FromArgb(60, 200, 200, 200));
 				g.FillRectangle(transparentBrush, bounds);
 			}
 		}

@@ -22,11 +22,6 @@ namespace graphic.GUI
             font = new Font("", 12);
         }
 
-        public void setBounds(Rectangle rect)
-        {
-            this.bounds = rect;
-        }
-
         public void setText(String text)
         {
             this.text = text;

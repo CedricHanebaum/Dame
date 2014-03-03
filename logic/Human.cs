@@ -7,13 +7,13 @@ namespace Draught
 {
     class Human :Player
     {
-        public int[] ChooseToken(Map m, Token.PlayerColor color)
+        public int[] ChooseToken(Map m, Token.PlayerColor color, List<int[]> taken)
         {
             return new int[]{-1,-1}; //TODO aus der GUI die gewählte Figur des Spielers holen
         }
-        public int[] SetStep(Map m, Token.PlayerColor color)
+        public int[] SetStep(Map m, Token.PlayerColor color, int[] p, int check, Control contrl, List<int[]> taken)
         {
-            int[] pos = ChooseToken(m, color);
+            int[] pos = ChooseToken(m, color, taken);
             int[,] help;
             if (m.Field[pos[0], pos[1]].Tok == "stone"){
                 Token.PlayerColor c = m.Field[pos[0], pos[1]].Color;
