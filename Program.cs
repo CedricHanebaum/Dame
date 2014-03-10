@@ -4,17 +4,14 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace ISO 
-{
+namespace ISO {
 
-	static class Program 
-	{
+	static class Program {
 
-        private static Form1 f;
-        private static Thread t;
+		private static Form1 f;
+		private static Thread t;
 
-		static void Main(string[] args) 
-		{
+		static void Main(string[] args) {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
@@ -26,10 +23,9 @@ namespace ISO
 			Application.Run(f);
 		}
 
-        public static void exit()
-        {
-            t.Join();
-            f.Close();
-        }
+		public static void exit() {
+			t.Join();
+			f.Close();
+		}
 	}
 }
